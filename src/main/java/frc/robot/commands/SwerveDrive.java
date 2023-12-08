@@ -54,16 +54,7 @@ public class SwerveDrive extends CommandBase {
     public void execute() {
         // Get values from double suppliers
 
-        if (slowMode.getAsBoolean()) { // Works switch back from Commented to 3 lines uncommented inside if statement
-            // if(!drivetrain.isInLoadZone()) { // Was removed because the driver wanted a consistant speed in slow Mode  
-            //     leftX = m_translationXSupplier.getAsDouble() * DrivetrainConstants.SLOW_MODE_TRANSLATIONAL_MULT;
-            //     leftY = m_translationYSupplier.getAsDouble() * DrivetrainConstants.SLOW_MODE_TRANSLATIONAL_MULT;
-            //     rightX = m_rotationSupplier.getAsDouble() * DrivetrainConstants.SLOW_MODE_ROTATIONAL_MULT;
-            // } else {
-            //     leftY = m_translationYSupplier.getAsDouble() * 0.5;
-            //     leftX = m_translationXSupplier.getAsDouble() * 0.5;
-            //     rightX = m_rotationSupplier.getAsDouble() * DrivetrainConstants.SLOW_MODE_ROTATIONAL_MULT;
-            // }
+        if (slowMode.getAsBoolean()) { 
             leftY = m_translationYSupplier.getAsDouble() * 0.5;
             leftX = m_translationXSupplier.getAsDouble() * 0.5;
             rightX = m_rotationSupplier.getAsDouble() * DrivetrainConstants.SLOW_MODE_ROTATIONAL_MULT;

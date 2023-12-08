@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
 import com.revrobotics.SparkMaxLimitSwitch;
 
 import edu.wpi.first.math.Matrix;
@@ -20,7 +19,6 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
-import frc.robot.commands.AutoScore;
 import frc.thunder.math.InterpolationMap;
 import frc.thunder.pathplanner.com.pathplanner.lib.auto.PIDConstants;
 import frc.thunder.swervelib.SdsModuleConfigurations;
@@ -106,11 +104,11 @@ public final class Constants {
 
         // Gains vaules for PIDControllers
         public static final class Gains {
-            public static final double kP = 0.15;// .116d;
+            public static final double kP = 0.6;// .116d;
             public static final double kI = 0d;
             public static final double kD = 0d;
 
-            public static final double kF = 0.225;// 229d;
+            public static final double kF = 0.7;// 229d;
         }
 
         // Gains vaules for theta PIDControllers
@@ -184,213 +182,30 @@ public final class Constants {
         public static final SparkMaxLimitSwitch.Type BOTTOM_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
     }
 
-    public static final class LimelightConstants {
-        public static final String FRONT_NAME = "limelight-front";
-        public static final String BACK_NAME = "limelight-back";
-        public static final Pose3d FRONT_POSE = new Pose3d(.1, 0.28, 0.72, new Rotation3d(0, 0, 0)); // Position on robot
-        public static final Pose3d BACK_POSE = new Pose3d(.1, 0.28, 0.83, new Rotation3d(0, 10, 180)); // Position on robot
-        public static final double CUBE_OFFSET = 0.0; // TODO find this value
-    }
-
-    public static final class ArmConstants {
-        // Motor configuration constants
-        public static final boolean MOTOR_INVERT = true;
-        public static final int CURRENT_LIMIT = 50;
-        public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-        public static final IdleMode NEUTRAL_MODE = IdleMode.kBrake;
-
-        // PID gains for our arm
-        public static final double UP_kP = 0.013d;
-        public static final double UP_kI = 0d;
-        public static final double UP_kD = 0d;
-
-        public static final double DOWN_kP = 0.01d;
-        public static final double DOWN_kI = 0d;
-        public static final double DOWN_kD = 0d;
-        public static final double kF = 0d;
-
-        public static final double TOLERANCE = 10d;
-
-        // Min and Max arm angles in degrees
-        public static final double MAX_ANGLE = 180;
-        public static final double MIN_ANGLE = -113d;
-
-        // Min and Max power
-        public static final double MIN_POWER = -1d;
-        public static final double MAX_POWER = 1d;
-
-        public static final double LENGTH = 26.519; // arm length in inches
-
-        // Offsets in degrees
-        public static final double ENCODER_OFFSET_GRIDLOCK = -104.68;
-        public static final double ENCODER_OFFSET_BLACKOUT = 89.8;
-
-        // Conversion factor for our arm, multiply this by the navite units to get degrees
-        public static final double POSITION_CONVERSION_FACTOR = 360;
-
-        // Arm limit switch types
-        public static final SparkMaxLimitSwitch.Type TOP_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
-        public static final SparkMaxLimitSwitch.Type BOTTOM_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
-
-        public static final double LOG_PERIOD = 0.21;
-
-        // Interpolation map for our arm Feedforward values to make sure we have enough minimum power to move the arm
-        public static InterpolationMap ARM_POSITIONAL_KF_MAP = new InterpolationMap() {
-            {
-                put(-135d, -0.005d);
-                put(-90d, 0d);
-                put(-45d, 0.005d);
-                put(10d, 0.02);
-                put(45d, 0.005d);
-                put(90d, 0d);
-                put(135d, -0.005d);
-            }
-        };
-
-        public static InterpolationMap ARM_VELOCITY_KF_MAP = new InterpolationMap() {
-            {
-                put(300d, -.2);
-                put(200d, -.1);
-                put(80d, -.01);
-                put(0d, 0d);
-                put(-80d, .01);
-                put(-200d, .07);
-                put(-300d, .1);
-            }
-        };
-    }
-
-    public static final class CollectorConstants {
-        public static final boolean MOTOR_INVERT = false;
-        public static final int CURRENT_LIMIT = 50;
-        public static final double HOLD_POWER_CUBE = 0.25;
-        public static final double HOLD_POWER_CONE = 0.35;
-        public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-        public static final IdleMode NEUTRAL_MODE = IdleMode.kBrake;
-
-        public static final double STALL_POWER = 40d; // Used to detect wether or not the collector is stalling meaning it has a game piece
-
-        public static final double LOG_PERIOD = 0.22;
-
-        // // Enum of possible game pieces
-        // public enum GamePiece {
-        //     CONE, CUBE, NONE
-        // }
-
-        //TODO: tune these
-        //Cube Theoretical: #3a01b2 (58, 1, 178)
-        public static final Color CUBE_OPTIMAL = new Color(58, 1, 178);
-        //Cone Theretical: #cb6200 (203,98,0)
-        public static final Color CONE_OPTIMAL = new Color(203, 98, 0);
-    }
-
-    public static final class WristConstants {
-
-        // Motor configuration constants
-        public static final boolean MOTOR_INVERT = true;
-        public static final int CURRENT_LIMIT = 40;
-        public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-        public static final IdleMode NEUTRAL_MODE = IdleMode.kBrake;
-
-        // PID gains for our wrist going up and down
-        public static final double UP_kP = 0.0079d;
-        public static final double UP_kD = 0.0001d;
-        public static final double DOWN_kP = 0.006d;
-        public static final double DOWN_kD = 0d;
-        public static final double kI = 0d;
-
-        // Tolernace for our wrist
-        public static final double TOLERANCE = 12d;
-
-        // Min/max angles in degrees
-        public static final double MAX_ANGLE = 151d;
-        public static final double MIN_ANGLE = -100d;
-
-        // Min and Max power
-        public static final double MIN_POWER = -1d;
-        public static final double MAX_POWER = 0.9d;
-
-        public static final double LOG_PERIOD = 0.24;
-
-        // Offsets in degrees        
-        public static final double ENCODER_OFFSET_GRIDLOCK = -105.3; //-161.5d;
-
-        public static final double ENCODER_OFFSET_BLACKOUT = -65.7; //TODO: check this
-
-        // Conversion factor for our wrist, multiply this by the navite units to get degrees
-        public static final double POSITION_CONVERSION_FACTOR = 360;
-
-        // Wrist limit switch types
-        public static final SparkMaxLimitSwitch.Type TOP_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
-        public static final SparkMaxLimitSwitch.Type BOTTOM_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
-
-        // Interpolation map for our arm Feedforward values to make sure we have enough minimum power to move the arm
-        public static InterpolationMap WRIST_KF_MAP = new InterpolationMap() {
-            {
-                // put(-90d, 0d);
-                // put(-45d, 0.0005d);
-                // put(-25d, 0.001d);
-                // put(0d, 0.004d);
-                // put(25d, -0.001d);
-                // put(45d, -0.0005d);
-                // put(90d, 0d);
-                // put(110d, 0d);
-
-                put(-90d, 0d);
-                put(-45d, -0.008d);
-                put(0d, 0.017d);
-                put(45d, 0.01d);
-                put(90d, 0d);
-                put(135d, 0.008d);
-
-            }
-        };
-    };
-
 
     // RobotMap Constants
     public static final class RobotMap {
         // CAN IDs
         public static final class CAN {
-            // Pigeon IMU ID
-            public static final int PIGEON_ID = 23;
             // Power distrobution hub ID
             public static final int PDH = 21;
 
             // Front left CanIDs
             public static final int FRONT_LEFT_DRIVE_MOTOR = 1;
             public static final int FRONT_LEFT_AZIMUTH_MOTOR = 2;
-            public static final int FRONT_LEFT_CANCODER = 31;
+            public static final int FRONT_LEFT_CANCODER = 0;
             // Front right CanIDs
             public static final int FRONT_RIGHT_DRIVE_MOTOR = 3;
             public static final int FRONT_RIGHT_AZIMUTH_MOTOR = 4;
-            public static final int FRONT_RIGHT_CANCODER = 32;
+            public static final int FRONT_RIGHT_CANCODER = 1;
             // Back right CanIDs
             public static final int BACK_RIGHT_DRIVE_MOTOR = 5;
             public static final int BACK_RIGHT_AZIMUTH_MOTOR = 6;
-            public static final int BACK_RIGHT_CANCODER = 33;
+            public static final int BACK_RIGHT_CANCODER = 2;
             // Back left CanIDs
             public static final int BACK_LEFT_DRIVE_MOTOR = 7;
             public static final int BACK_LEFT_AZIMUTH_MOTOR = 8;
-            public static final int BACK_LEFT_CANCODER = 34;
-
-            // COLLECTOR
-            public static final int COLLECTOR_MOTOR = 12;
-
-            // ARM
-            public static final int ARM_MOTOR = 10;
-
-            // WRIST
-            public static final int WRIST_MOTOR = 11;
-
-            // ELEVATOR
-            public static final int ELEVATOR_MOTOR = 9;
-
-            // MISC SENSORS
-            public static final int TIME_OF_FLIGHT = 0;
-
-            // CANdle
-            public static final int CANDLE = 22;
+            public static final int BACK_LEFT_CANCODER = 3;
         }
 
         public static final class PWM {
@@ -427,17 +242,6 @@ public final class Constants {
         public static final double kP = 2;
         public static final double kI = 0;
         public static final double kD = 0;
-    }
-
-    // Constants for the LEDs
-    public static final class LedConstants {
-        public static final double BRIGHTNESS = .25;
-        public static final LEDStripType STRIP_TYPE = LEDStripType.RGB;
-        public static final int LED_LENGTH = 150;
-
-        public static enum LEDStates {
-            wantsCone, wantsCube, hasCone, hasCube, override, noPiece
-        }
     }
 
     // Constants for vision

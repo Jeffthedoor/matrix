@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import frc.robot.Constants.LimelightConstants;
 import frc.thunder.LightningRobot;
 import frc.thunder.auto.Autonomous;
 import frc.thunder.limelightlib.LimelightHelpers;

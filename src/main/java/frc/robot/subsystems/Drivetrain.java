@@ -4,10 +4,10 @@ import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.kauailabs.navx.frc.AHRS;
 
 import frc.thunder.swervelib.Mk4ModuleConfiguration;
-import frc.thunder.swervelib.Mk4iSwerveModuleHelper;
+import frc.thunder.swervelib.Mk4SwerveModuleHelper;
 import frc.thunder.swervelib.SwerveModule;
 import frc.thunder.vision.VisionBase;
 import edu.wpi.first.math.MathUtil;
@@ -25,6 +25,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
@@ -64,8 +65,8 @@ public class Drivetrain extends SubsystemBase {
     //Target to focus on
     private int aprilTagTarget = -1;
 
-    // Creating new pigeon2 IMU
-    private final WPI_Pigeon2 pigeon = new WPI_Pigeon2(RobotMap.CAN.PIGEON_ID);
+    // public Pigeon2 gyro;
+    public AHRS gyro = new AHRS(SPI.Port.kMXP);
 
     // Creating our list of module states and module positions
     private SwerveModuleState[] states = {new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState(), new SwerveModuleState()};
@@ -89,8 +90,7 @@ public class Drivetrain extends SubsystemBase {
     private double BACK_RIGHT_STEER_OFFSET = Offsets.Gridlock.BACK_RIGHT_STEER_OFFSET;
 
     // Swerve pose esitmator for odometry
-    SwerveDrivePoseEstimator poseEstimator =
-            new SwerveDrivePoseEstimator(kinematics, getYaw2d(), modulePositions, new Pose2d(), DrivetrainConstants.STANDARD_DEV_POSE_MATRIX, VisionConstants.STANDARD_DEV_VISION_MATRIX);
+    SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw2d(), modulePositions, new Pose2d(), DrivetrainConstants.STANDARD_DEV_POSE_MATRIX, VisionConstants.STANDARD_DEV_VISION_MATRIX);
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getYaw2d(), modulePositions);
 
     // Creates our drivetrain shuffleboard tab for displaying module data and a periodic shuffleboard for data that doesn't need constant updates
@@ -98,7 +98,6 @@ public class Drivetrain extends SubsystemBase {
     private LightningShuffleboardPeriodic periodicShuffleboard;
     private LightningShuffleboardPeriodic periodicShuffleboardAuto;
     private final Mk4ModuleConfiguration swerveConfiguration = new Mk4ModuleConfiguration();
-    private final Mk4ModuleConfiguration blSwerveConfiguration = new Mk4ModuleConfiguration();
 
     // PIDController for heading compenstation
     private final PIDController headingController = new PIDController(HeadingGains.kP, HeadingGains.kI, HeadingGains.kD);
@@ -121,9 +120,6 @@ public class Drivetrain extends SubsystemBase {
     // Chassis speeds for the robot
     private ChassisSpeeds outputChassisSpeeds = new ChassisSpeeds();
 
-    private LimelightBack limelightBack;
-    private LimelightFront limelightFront;
-
     private boolean hasLimitChanged = false;
 
     // Manual trajectory variables
@@ -144,9 +140,10 @@ public class Drivetrain extends SubsystemBase {
      * @param limelightBack  The back Limelight
      * @param limelightFront The front Limelight
      */
-    public Drivetrain(LimelightBack limelightBack, LimelightFront limelightFront) {
-        this.limelightBack = limelightBack;
-        this.limelightFront = limelightFront;
+    public Drivetrain() {
+        // gyro = new AHRS(SPI.Port.kMXP);
+        // Zero our gyro
+        zeroHeading();
 
         if (Constants.isBlackout()) {
             FRONT_LEFT_STEER_OFFSET = Offsets.Blackout.FRONT_LEFT_STEER_OFFSET;
@@ -162,34 +159,27 @@ public class Drivetrain extends SubsystemBase {
         swerveConfiguration.setNominalVoltage(DrivetrainConstants.NOMINAL_VOLTAGE);
         swerveConfiguration.setDrivePIDGains(new SparkMaxPIDGains(Gains.kP, Gains.kI, Gains.kD, Gains.kF));
 
-        blSwerveConfiguration.setDriveCurrentLimit(DrivetrainConstants.DRIVE_CURRENT_LIMIT);
-        blSwerveConfiguration.setSteerCurrentLimit(DrivetrainConstants.STEER_CURRENT_LIMIT);
-        blSwerveConfiguration.setNominalVoltage(DrivetrainConstants.NOMINAL_VOLTAGE);
-        blSwerveConfiguration.setDrivePIDGains(new SparkMaxPIDGains(Gains.kP, Gains.kI, Gains.kD, Gains.kF));
-
         // Making front left module
-        frontLeftModule = Mk4iSwerveModuleHelper.createNeo(tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0), swerveConfiguration,
-                Mk4iSwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_LEFT_DRIVE_MOTOR, RobotMap.CAN.FRONT_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_LEFT_CANCODER, FRONT_LEFT_STEER_OFFSET);
+        frontLeftModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0), swerveConfiguration,
+                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_LEFT_DRIVE_MOTOR, RobotMap.CAN.FRONT_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_LEFT_CANCODER, FRONT_LEFT_STEER_OFFSET);
 
         // Making front right module
-        frontRightModule = Mk4iSwerveModuleHelper.createNeo(tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0), swerveConfiguration,
-                Mk4iSwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_RIGHT_DRIVE_MOTOR, RobotMap.CAN.FRONT_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_RIGHT_CANCODER, FRONT_RIGHT_STEER_OFFSET);
+        frontRightModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0), swerveConfiguration,
+                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_RIGHT_DRIVE_MOTOR, RobotMap.CAN.FRONT_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_RIGHT_CANCODER, FRONT_RIGHT_STEER_OFFSET);
 
         // Making backleft module
-        backLeftModule = Mk4iSwerveModuleHelper.createNeo(tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0), blSwerveConfiguration,
-                Mk4iSwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_LEFT_DRIVE_MOTOR, RobotMap.CAN.BACK_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_LEFT_CANCODER, BACK_LEFT_STEER_OFFSET);
+        backLeftModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0), swerveConfiguration,
+                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_LEFT_DRIVE_MOTOR, RobotMap.CAN.BACK_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_LEFT_CANCODER, BACK_LEFT_STEER_OFFSET);
 
         // Making back right module
-        backRightModule = Mk4iSwerveModuleHelper.createNeo(tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0), swerveConfiguration,
-                Mk4iSwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_RIGHT_DRIVE_MOTOR, RobotMap.CAN.BACK_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_RIGHT_CANCODER, BACK_RIGHT_STEER_OFFSET);
+        backRightModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0), swerveConfiguration,
+                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_RIGHT_DRIVE_MOTOR, RobotMap.CAN.BACK_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_RIGHT_CANCODER, BACK_RIGHT_STEER_OFFSET);
 
         initialTimeStamp = Timer.getFPGATimestamp();
 
         // Initialize the shuffleboard values and start logging data
-        initializeShuffleboard();
+        // initializeShuffleboard();
 
-        // Zero our gyro
-        zeroHeading();
 
         CommandScheduler.getInstance().registerSubsystem(this);
     }
@@ -223,10 +213,9 @@ public class Drivetrain extends SubsystemBase {
             }
         } else {
             updateOdometry();
-            updateVision();
 
-            periodicShuffleboard.loop();
-            periodicShuffleboardAuto.loop();
+            // periodicShuffleboard.loop();
+            // periodicShuffleboardAuto.loop();
 
             if (DriverStation.isTeleop() && !hasLimitChanged) {
                 int newLimit = 53;
@@ -268,30 +257,30 @@ public class Drivetrain extends SubsystemBase {
     public void drive(ChassisSpeeds chassisSpeeds) {
         outputChassisSpeeds = chassisSpeeds;
 
-        // If were not commanding any thing to the motors, make sure our states speeds are 0
-        if (states != null && chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
-            states[0].speedMetersPerSecond = 0;
-            states[1].speedMetersPerSecond = 0;
-            states[2].speedMetersPerSecond = 0;
-            states[3].speedMetersPerSecond = 0;
+        // // If were not commanding any thing to the motors, make sure our states speeds are 0
+        // if (states != null && chassisSpeeds.vxMetersPerSecond == 0 && chassisSpeeds.vyMetersPerSecond == 0 && chassisSpeeds.omegaRadiansPerSecond == 0) {
+        //     states[0].speedMetersPerSecond = 0;
+        //     states[1].speedMetersPerSecond = 0;
+        //     states[2].speedMetersPerSecond = 0;
+        //     states[3].speedMetersPerSecond = 0;
 
-        } else {
+        // } else {
             // If not set the states to the commanded chassis speeds
             states = kinematics.toSwerveModuleStates(outputChassisSpeeds);
-        }
+        // }
 
-        if (flipFL) {
-            states[0].speedMetersPerSecond *= -1;
-        }
-        if (flipFR) {
-            states[1].speedMetersPerSecond *= -1;
-        }
-        if (flipBL) {
-            states[2].speedMetersPerSecond *= -1;
-        }
-        if (flipBR) {
-            states[3].speedMetersPerSecond *= -1;
-        }
+        // if (flipFL) {
+        //     states[0].speedMetersPerSecond *= -1;
+        // }
+        // if (flipFR) {
+        //     states[1].speedMetersPerSecond *= -1;
+        // }
+        // if (flipBL) {
+        //     states[2].speedMetersPerSecond *= -1;
+        // }
+        // if (flipBR) {
+        //     states[3].speedMetersPerSecond *= -1;
+        // }
 
         // Sets the states to the modules
         setStates(states);
@@ -360,92 +349,6 @@ public class Drivetrain extends SubsystemBase {
         //     pose = new Pose2d(16.48 - pose.getX(), pose.getY(), pose.getRotation());
         // }
     }
-
-    private boolean firstTime = true;
-
-    // Takes out vision data and filters it then adds it to the odometry position calculation
-    public void updateVision() {
-        if (VisionBase.isVisionEnabled()) {
-            visionPose2d = null;
-            double latency = 0;
-            double tagDistance = 0;
-            if (limelightFront.hasVision()) {
-                visionPose2d = limelightFront.getRobotPose();
-                latency = limelightFront.getLatencyBotPoseBlue();
-                tagDistance = limelightFront.getTagDistance();
-                if (firstTime) {
-                    setInitialPose(visionPose2d);
-                    firstTime = false;
-                }
-            } else if (limelightBack.hasVision()) {
-                visionPose2d = limelightBack.getRobotPose();
-                latency = limelightBack.getLatencyBotPoseBlue();
-                tagDistance = limelightBack.getTagDistance();
-                if (firstTime) {
-                    setInitialPose(visionPose2d);
-                    firstTime = false;
-                }
-            }
-
-            // Filters if on field and within the range values return good data
-            if (visionPose2d == null || visionPose2d.getX() > 23.04 || visionPose2d.getY() > 8.02 || visionPose2d.getX() < 0 || visionPose2d.getY() < 0 || tagDistance > 4) {
-                return;
-            }
-
-            double currTime = Timer.getFPGATimestamp();
-            LightningShuffleboard.setDouble("Drivetrain", "Velocity between points", pose.getTranslation().getDistance(visionPose2d.getTranslation()) / (currTime - lastTime));
-            if (pose.getTranslation().getDistance(visionPose2d.getTranslation()) / (currTime - lastTime) > DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND) {
-                return;
-            }
-
-            // if (tagDistance != -1) {
-            //     double distanceBasedDev = VisionConstants.visionStandardDevMap.get(tagDistance + getDriveVelocity());
-            //     poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(distanceBasedDev, distanceBasedDev, distanceBasedDev));
-            // }
-
-            visionPose2d = new Pose2d(visionPose2d.getX(), pose.getY(), getHeading());
-            poseEstimator.addVisionMeasurement(visionPose2d, Timer.getFPGATimestamp() - latency - .0472);
-            pose = poseEstimator.getEstimatedPosition();
-
-            lastKnownGoodVisionX = visionPose2d.getX();
-            lastKnownGoodVisionY = visionPose2d.getY();
-            lastKnownGoodVisionRotation = visionPose2d.getRotation().getDegrees();
-            lastTime = currTime;
-
-            LightningShuffleboard.setDouble("Drivetrain", "Accepted vision X", lastKnownGoodVisionX);
-            LightningShuffleboard.setDouble("Drivetrain", "Accepted vision Y", lastKnownGoodVisionY);
-            LightningShuffleboard.setDouble("Drivetrain", "Accepted vision Rotation", lastKnownGoodVisionRotation);
-        }
-    }
-
-    /**
-     * tag 
-     * 
-     * @param pos Pos of tag 1 at C nodes
-     */
-    public void setAprilTagTarget(int pos) {
-        if (DriverStation.getAlliance() == Alliance.Blue) {
-            switch(pos){
-                case 1:
-                    pos = 6;
-                    break;
-                case 2:
-                    pos = 7;
-                    break;
-                case 3:
-                    pos = 8;
-                    break;
-            }
-        }
-        limelightBack.setPipelineNum(pos);
-        limelightFront.setPipelineNum(pos);
-    }
-
-    public void setAprilTagTargetAll() {
-        limelightBack.setPipelineNum(0);
-        limelightFront.setPipelineNum(0);
-    }
-
     /**
      * 2 Method to set states of modules.
      */
@@ -471,8 +374,6 @@ public class Drivetrain extends SubsystemBase {
     private void initializeShuffleboard() {
         periodicShuffleboard = new LightningShuffleboardPeriodic("Drivetrain", DrivetrainConstants.LOG_PERIOD, 
             new Pair<String, Object>("Pigeon Yaw", (DoubleSupplier) () -> getYaw2d().getDegrees()),
-            new Pair<String, Object>("roll", (DoubleSupplier) () -> pigeon.getRoll()), 
-            new Pair<String, Object>("pitch", (DoubleSupplier) () -> pigeon.getPitch()),
             new Pair<String, Object>("fl module position", (DoubleSupplier) () -> modulePositions[0].distanceMeters),
             new Pair<String, Object>("fr module position", (DoubleSupplier) () -> modulePositions[1].distanceMeters),
             new Pair<String, Object>("bl module position", (DoubleSupplier) () -> modulePositions[2].distanceMeters),
@@ -486,10 +387,6 @@ public class Drivetrain extends SubsystemBase {
             new Pair<String, Object>("desired X", (DoubleSupplier) () -> desiredPose.getX()), 
             new Pair<String, Object>("desired Y", (DoubleSupplier) () -> desiredPose.getY()),
             new Pair<String, Object>("desired Z", (DoubleSupplier) () -> desiredPose.getRotation().getDegrees()));
-
-        periodicShuffleboardAuto = new LightningShuffleboardPeriodic("Autonomous", 
-            new Pair<String, Object>("has vision", (BooleanSupplier) () -> limelightBack.hasVision()),
-            new Pair<String, Object>("Vison GOOD", (BooleanSupplier) () -> !firstTime));
     }
 
     /**
@@ -513,7 +410,7 @@ public class Drivetrain extends SubsystemBase {
      * @param initalPosition the initial position of the robot
      */
     public void setInitialPose(Pose2d initalPosition) {
-        pigeon.setYaw(initalPosition.getRotation().getDegrees());
+        // gyro.setAngleAdjustment(initalPosition.getRotation().minus(gyro.getRotation2d());
         pose = new Pose2d(initalPosition.getTranslation(), initalPosition.getRotation());
         poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw2d(), modulePositions, pose);
     }
@@ -531,7 +428,7 @@ public class Drivetrain extends SubsystemBase {
      * @return the current heading of the robot in degrees from 0 to 360
      */
     public Rotation2d getYaw2d() {
-        return Rotation2d.fromDegrees(MathUtil.inputModulus(pigeon.getYaw() - 90, 0, 360));
+        return Rotation2d.fromDegrees(MathUtil.inputModulus(gyro.getYaw() - 90, 0, 360));
     }
 
     /**
@@ -540,7 +437,7 @@ public class Drivetrain extends SubsystemBase {
      * @return the current pitch of the robot in degrees from -180 to 180
      */
     public Rotation2d getPitch2d() {
-        return Rotation2d.fromDegrees(MathUtil.inputModulus(pigeon.getPitch(), -180, 180));
+        return Rotation2d.fromDegrees(MathUtil.inputModulus(gyro.getPitch(), -180, 180));
     }
 
     /**
@@ -549,7 +446,7 @@ public class Drivetrain extends SubsystemBase {
      * @return the current roll of the robot in degrees from -180 to 180
      */
     public Rotation2d getRoll2d() {
-        return Rotation2d.fromDegrees(MathUtil.inputModulus(pigeon.getRoll(), -180, 180));
+        return Rotation2d.fromDegrees(MathUtil.inputModulus(gyro.getRoll(), -180, 180));
     }
 
     /**
@@ -587,11 +484,7 @@ public class Drivetrain extends SubsystemBase {
      * Zeroes the yaw of the pigeon.
      */
     public void zeroHeading() {
-        pigeon.setYaw(0);
-    }
-
-    public void setYaw(double input) {
-        pigeon.setYaw(input);
+        gyro.reset();
     }
 
     /**
