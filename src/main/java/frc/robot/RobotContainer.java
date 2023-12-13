@@ -1,24 +1,15 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
-import frc.thunder.LightningContainer;
-import frc.thunder.auto.Autonomous;
-import frc.thunder.auto.AutonomousCommandFactory;
-import frc.thunder.pathplanner.com.pathplanner.lib.PathConstraints;
-import frc.thunder.testing.SystemTest;
+import frc.robot.lib.LightningContainer;
+import frc.robot.lib.auto.AutonomousCommandFactory;
 
 public class RobotContainer extends LightningContainer {
 
@@ -74,19 +65,4 @@ public class RobotContainer extends LightningContainer {
 
     @Override
     protected void configureFaultMonitors() {}
-
-
-    /* Hello this is your favorite programing monster
-     * 
-     * I haunt your code and your dreams, you wont sleep at night while thinking about 
-     * the code issues you've been having. 
-     * 
-     * have fun
-     * 
-     * bu bye >:)
-     */
-
-
-
-
 }

@@ -1,19 +1,16 @@
 package frc.robot.subsystems;
 
-import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import frc.thunder.swervelib.Mk4ModuleConfiguration;
-import frc.thunder.swervelib.Mk4SwerveModuleHelper;
-import frc.thunder.swervelib.SwerveModule;
-import frc.thunder.vision.VisionBase;
+import frc.robot.lib.swervelib.Mk4ModuleConfiguration;
+import frc.robot.lib.swervelib.Mk4SwerveModuleHelper;
+import frc.robot.lib.swervelib.SwerveModule;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -32,19 +29,13 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.AutoAlignConstants;
 import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.Constants.DrivetrainConstants.Offsets;
 import frc.robot.Constants.RobotMap;
-import frc.robot.Constants.VisionConstants;
 import frc.robot.Constants.DrivetrainConstants.Gains;
 import frc.robot.Constants.DrivetrainConstants.HeadingGains;
-import frc.thunder.auto.AutonomousCommandFactory;
-import frc.thunder.config.SparkMaxPIDGains;
-import frc.thunder.pathplanner.com.pathplanner.lib.PathConstraints;
-import frc.thunder.pathplanner.com.pathplanner.lib.PathPoint;
-import frc.thunder.shuffleboard.LightningShuffleboard;
-import frc.thunder.shuffleboard.LightningShuffleboardPeriodic;
+import frc.robot.lib.SparkMaxPIDGains;
+import frc.robot.lib.shuffleboard.LightningShuffleboardPeriodic;
 
 /**
  * The drivetrain subsystem
@@ -62,8 +53,6 @@ public class Drivetrain extends SubsystemBase {
             // Back right
             new Translation2d(-DrivetrainConstants.DRIVETRAIN_TRACKWIDTH_METERS / 2.0, -DrivetrainConstants.DRIVETRAIN_WHEELBASE_METERS / 2.0));
 
-    //Target to focus on
-    private int aprilTagTarget = -1;
 
     // public Pigeon2 gyro;
     public AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -90,13 +79,11 @@ public class Drivetrain extends SubsystemBase {
     private double BACK_RIGHT_STEER_OFFSET = Offsets.Gridlock.BACK_RIGHT_STEER_OFFSET;
 
     // Swerve pose esitmator for odometry
-    SwerveDrivePoseEstimator poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw2d(), modulePositions, new Pose2d(), DrivetrainConstants.STANDARD_DEV_POSE_MATRIX, VisionConstants.STANDARD_DEV_VISION_MATRIX);
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getYaw2d(), modulePositions);
 
     // Creates our drivetrain shuffleboard tab for displaying module data and a periodic shuffleboard for data that doesn't need constant updates
     private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
     private LightningShuffleboardPeriodic periodicShuffleboard;
-    private LightningShuffleboardPeriodic periodicShuffleboardAuto;
     private final Mk4ModuleConfiguration swerveConfiguration = new Mk4ModuleConfiguration();
 
     // PIDController for heading compenstation
@@ -106,13 +93,6 @@ public class Drivetrain extends SubsystemBase {
     private boolean flipFR = false;
     private boolean flipBR = false;
     private boolean flipBL = false;
-
-    private boolean doVisionUpdate = true;
-    private double lastKnownGoodVisionX = 0;
-    private double lastKnownGoodVisionY = 0;
-    private double lastKnownGoodVisionRotation = 0;
-    private double lastTime = 0;
-
     // Heading compenstaion variables
     // private boolean updatedHeading = false;
     // private double lastGoodheading = 0d;
@@ -122,14 +102,6 @@ public class Drivetrain extends SubsystemBase {
 
     private boolean hasLimitChanged = false;
 
-    // Manual trajectory variables
-    private Pose2d desiredPose = new Pose2d();
-    private double maxVel = 0d;
-    private double maxAccell = 0d;
-
-    private double velocity = 0;
-
-    private Pose2d visionPose2d;
 
     private boolean initialSync = false;
     private double initialTimeStamp = 0;
@@ -178,7 +150,7 @@ public class Drivetrain extends SubsystemBase {
         initialTimeStamp = Timer.getFPGATimestamp();
 
         // Initialize the shuffleboard values and start logging data
-        // initializeShuffleboard();
+        initializeShuffleboard();
 
 
         CommandScheduler.getInstance().registerSubsystem(this);
@@ -214,7 +186,7 @@ public class Drivetrain extends SubsystemBase {
         } else {
             updateOdometry();
 
-            // periodicShuffleboard.loop();
+            periodicShuffleboard.loop();
             // periodicShuffleboardAuto.loop();
 
             if (DriverStation.isTeleop() && !hasLimitChanged) {
@@ -243,11 +215,6 @@ public class Drivetrain extends SubsystemBase {
         return headingController;
     }
 
-    public void hardResetToVision() {
-        if (visionPose2d != null) {
-            poseEstimator.resetPosition(getHeading(), modulePositions, visionPose2d);
-        }
-    }
 
     /**
      * This takes chassis speeds and converts them to module states and then sets states.
@@ -342,8 +309,7 @@ public class Drivetrain extends SubsystemBase {
      */
     public void updateOdometry() {
         updateModulePositions();
-        pose = poseEstimator.update(getYaw2d(), modulePositions);
-        rawPose = odometry.update(getYaw2d(), modulePositions);
+        pose = odometry.update(getYaw2d(), modulePositions);
 
         // if (DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
         //     pose = new Pose2d(16.48 - pose.getX(), pose.getY(), pose.getRotation());
@@ -373,7 +339,7 @@ public class Drivetrain extends SubsystemBase {
     @SuppressWarnings("unchecked")
     private void initializeShuffleboard() {
         periodicShuffleboard = new LightningShuffleboardPeriodic("Drivetrain", DrivetrainConstants.LOG_PERIOD, 
-            new Pair<String, Object>("Pigeon Yaw", (DoubleSupplier) () -> getYaw2d().getDegrees()),
+            new Pair<String, Object>("Gyro Yaw", (DoubleSupplier) () -> getYaw2d().getDegrees()),
             new Pair<String, Object>("fl module position", (DoubleSupplier) () -> modulePositions[0].distanceMeters),
             new Pair<String, Object>("fr module position", (DoubleSupplier) () -> modulePositions[1].distanceMeters),
             new Pair<String, Object>("bl module position", (DoubleSupplier) () -> modulePositions[2].distanceMeters),
@@ -383,26 +349,10 @@ public class Drivetrain extends SubsystemBase {
             new Pair<String, Object>("bl amperage", (DoubleSupplier) () -> backLeftModule.getDriveAmperage()),
             new Pair<String, Object>("br amperage", (DoubleSupplier) () -> backRightModule.getDriveAmperage()),
             new Pair<String, Object>("odo Pose", (Supplier<double[]>) () -> new double[] {pose.getX(), pose.getY(), pose.getRotation().getRadians()}),
-            new Pair<String, Object>("raw Pose", (Supplier<double[]>) () -> new double[] {rawPose.getX(), rawPose.getY(), rawPose.getRotation().getRadians()}),
-            new Pair<String, Object>("desired X", (DoubleSupplier) () -> desiredPose.getX()), 
-            new Pair<String, Object>("desired Y", (DoubleSupplier) () -> desiredPose.getY()),
-            new Pair<String, Object>("desired Z", (DoubleSupplier) () -> desiredPose.getRotation().getDegrees()));
+            new Pair<String, Object>("raw Pose", (Supplier<double[]>) () -> new double[] {rawPose.getX(), rawPose.getY(), rawPose.getRotation().getRadians()}));
     }
 
-    /**
-     * Gets the current pathplanner path point of the robot in meters using
-     */
-    public PathPoint getCurrentPathPoint() {
-        return PathPoint.fromCurrentHolonomicState(pose, chassisSpeeds).withControlLengths(AutoAlignConstants.CONTROL_LENGTHS, AutoAlignConstants.CONTROL_LENGTHS);
-    }
 
-    // Testing for auton
-    public void instantSyncVision() {
-        if (visionPose2d != null) {
-            pose = visionPose2d;
-            System.out.println("Ran the Sync");
-        }
-    }
 
     /**
      * Sets initial pose of robot in meters.
@@ -412,7 +362,6 @@ public class Drivetrain extends SubsystemBase {
     public void setInitialPose(Pose2d initalPosition) {
         // gyro.setAngleAdjustment(initalPosition.getRotation().minus(gyro.getRotation2d());
         pose = new Pose2d(initalPosition.getTranslation(), initalPosition.getRotation());
-        poseEstimator = new SwerveDrivePoseEstimator(kinematics, getYaw2d(), modulePositions, pose);
     }
 
     /**
@@ -500,11 +449,10 @@ public class Drivetrain extends SubsystemBase {
      * @param pose the pose to which to set the odometry
      */
     public void resetOdometry(Pose2d pose) {
-        poseEstimator.resetPosition(getYaw2d(), modulePositions, pose);
+        odometry.resetPosition(getYaw2d(), modulePositions, pose);
     }
 
     public void poseReset(Pose2d pose) {
-        poseEstimator.resetPosition(getYaw2d(), modulePositions, pose);
         odometry.resetPosition(getHeading(), modulePositions, pose);
     }
 
@@ -636,43 +584,4 @@ public class Drivetrain extends SubsystemBase {
         backLeftModule.setEncoderAngle();
         backRightModule.setEncoderAngle();
     }
-
-    public void setDesiredPose(Pose2d desiredPose) {
-        this.desiredPose = desiredPose;
-
-    }
-
-    public Pose2d getDesiredPose() {
-        return desiredPose;
-    }
-
-    public void moveToDesiredPose(AutonomousCommandFactory autoFactory) {
-
-        maxVel = MathUtil.clamp(pose.getTranslation().getDistance(desiredPose.getTranslation()) * 2, 0.5, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
-        maxAccell = 5;
-
-        System.out.println("desired X: " + desiredPose.getX());
-        System.out.println("desired Y: " + desiredPose.getX());
-        System.out.println("odo X: " + pose.getX());
-        System.out.println("odo Y: " + pose.getY());
-
-        // MathUtil.clamp(pose.getTranslation().getDistance(desiredPose.getTranslation()) / DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND,
-        //         -DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
-
-        Rotation2d driveHeading = getDriveHeading(desiredPose.getX(), desiredPose.getY());
-
-        autoFactory.createManualTrajectory(new PathConstraints(maxVel, maxAccell), getCurrentPathPoint(),
-                new PathPoint(desiredPose.getTranslation(), driveHeading, desiredPose.getRotation()).withControlLengths(AutoAlignConstants.CONTROL_LENGTHS, AutoAlignConstants.CONTROL_LENGTHS));
-
-    }
-
-    public boolean onTarget() {
-        return Math.abs(pose.getTranslation().getDistance(desiredPose.getTranslation())) < 0.1;
-    }
-
-    // public void getPoseFromIMU() {
-    //     short[] xyz = new short[3];
-    // 	pigeon.getBiasedAccelerometer(xyz);
-    // 	Translation3d transVector =  new Translation3d(xyz[0] / 16384d * 9.81d, xyz[1] / 16384d * 9.81d, xyz[2] / 16384d * 9.81d);
-    // }
 }

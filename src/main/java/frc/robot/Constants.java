@@ -2,7 +2,6 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -10,18 +9,12 @@ import com.revrobotics.SparkMaxLimitSwitch;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.util.Color;
-import frc.thunder.math.InterpolationMap;
-import frc.thunder.pathplanner.com.pathplanner.lib.auto.PIDConstants;
-import frc.thunder.swervelib.SdsModuleConfigurations;
+import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
 
 /**
  * Class to hold all of the constants for the robot
@@ -244,66 +237,6 @@ public final class Constants {
         public static final double kD = 0;
     }
 
-    // Constants for vision
-    public static final class VisionConstants {
-        // Represents camera FOV from center to edge
-        public static final double HORIZ_CAMERA_FOV = 29.8d;
-
-        // Arbitrary value for how close the robot needs to be to the target (in degrees)
-        public static final double HORIZ_DEGREE_TOLERANCE = 3d;
-
-        // Standard deviation for vision, heading is 1000 becuase were using pigeon, so i dont want to use vision heading
-        public static final Matrix<N3, N1> STANDARD_DEV_VISION_MATRIX = VecBuilder.fill(0.6, 0.6, 0.6);
-
-        // Distance from the center of the field, used for getIsolatedTagPose()
-        public static final double ISOLATEDTAGXOFFSET = 7.24;
-
-        public static final double ISOLATEDTAGYOFFSET = 1.07;
-
-        public static final InterpolationMap visionStandardDevMap = new InterpolationMap() {
-            {
-                put(0d, 0.3);
-                put(2d, 0.4);
-                put(5d, 0.5);
-                put(7d, 1d);
-                put(8d, 1.5d);
-                put(12d, 10d);
-            }
-        };
-
-    }
-
-    // Constants for the lift
-    public static final class LiftConstants {
-        public double ELEVATOR_SAFE_HEIGHT = 4;
-
-        // All of the different states the lift can be in
-        public enum LiftState {
-            //ground collects
-            groundCone, groundCube, groundConeVertical,
-
-            //substation collects (TODO: see if we need seperate setpoints/states for cube vs cone)
-            doubleSubstationCollect, singleSubCone, singleSubCube, OTB_DoubleSubstationCollect,
-
-            //score states
-            midCubeScore, highCubeScore, midConeScore, highConeScore, OTB_Mid, OTB_High,
-
-            //substates
-            stowedCollect, stowedScore, stowedSingleSub, scoreToCollect, elevatorDeployed,
-
-            //s t o w e d
-            stowed
-        }
-
-        // All of the different plans the lift can follow
-        public enum LiftPlan {
-            parallel, armThenWristAndEle, eleWristArm, eleArmWrist, armAndWristThenEle, eleThenArmAndWrist, eleAndWristThenArm, wristArmEle
-        }
-
-        public static final Object[] squishList = new Object[] {LiftState.singleSubCone, LiftState.singleSubCube, LiftState.midCubeScore, LiftState.groundCube};
-
-        public static final double LOG_PERIOD = 0.23;
-    }
 
     // Constants for autonomous
     public static final class AutonomousConstants {
@@ -320,35 +253,6 @@ public final class Constants {
 
     }
 
-    //Constants for autoAlign
-    public static final class AutoAlignConstants {
-
-        public static final class BluePoints {
-            public static final Pose2d SLOT_1_POSE = new Pose2d(2.44, 4.9, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_2_POSE = new Pose2d(2.44, 4.35, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_3_POSE = new Pose2d(2.44, 3.8, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_4_POSE = new Pose2d(2.44, 3.25, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_5_POSE = new Pose2d(2.44, 2.7, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_6_POSE = new Pose2d(2.44, 2.15, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_7_POSE = new Pose2d(2.44, 1.6, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_8_POSE = new Pose2d(2.44, 1.05, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_9_POSE = new Pose2d(2.44, 0.5, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_10_POSE = new Pose2d(14.23, 2.65, Rotation2d.fromDegrees(90));
-        }
-
-        public static final class RedPoints {
-            public static final Pose2d SLOT_10_POSE = new Pose2d(14.23, .09, Rotation2d.fromDegrees(-90));
-            public static final Pose2d SLOT_9_POSE = new Pose2d(2.44, 7.3, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_8_POSE = new Pose2d(2.44, 6.75, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_7_POSE = new Pose2d(2.44, 6.2, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_6_POSE = new Pose2d(2.44, 5.65, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_5_POSE = new Pose2d(2.44, 5.1, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_4_POSE = new Pose2d(2.44, 4.55, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_3_POSE = new Pose2d(2.44, 4.0, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_2_POSE = new Pose2d(2.44, 3.45, Rotation2d.fromDegrees(180));
-            public static final Pose2d SLOT_1_POSE = new Pose2d(2.44, 2.9, Rotation2d.fromDegrees(180));
-        }
-
         public static enum SlotPosition { // Position of each colum of scoring nodes for AutoScoring
             slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9
         }
@@ -364,10 +268,3 @@ public final class Constants {
         //Log period auto align
         public static final double LOG_PERIOD = 0.25;
     }
-
-    public static final class AutoScoreConstants {
-        public static enum ScoreingState {
-            setLift, moveToScore, score, moveToStow, stow
-        }
-    }
-}
