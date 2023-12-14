@@ -34,8 +34,6 @@ public final class Constants {
         return !isHowitzer();
     }
 
-    public static final double COMP_LOG_PERIOD = .33;
-
     // Constants for xbox controlers
     public static final class ControllerConstants {
         // Ports for the controllers
@@ -48,18 +46,10 @@ public final class Constants {
         public static final double MAX_POWER = 1d;
     }
 
-    // Constants for our system tests    
-    public static final class SystemTestConstants {
-        // Drive Test Variables
-        public static final int DEGREES_INTERVAL_INCREASE = 30;
-        public static final int ANGLE_DEAD_ZONE = 3;
-        public static final int MAX_ROTATIONS_PER_DIRECTION = 2;
-    }
-
     // Constants for our drivetrain
     public static final class DrivetrainConstants {
         // Our drivetrain track width and Wheelbase
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.8125d);
+        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.8125d); //TODO FIND and get for each bot
         public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(20.8125d);
 
         // Module resting/default angles
@@ -73,7 +63,7 @@ public final class Constants {
         // public static final double MAX_VELOCITY_METERS_PER_SECOND = 5676.0 / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction() * SdsModuleConfigurations.MK4I_L2.getWheelDiameter() * Math.PI;
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.5;
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
-        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = +MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 2 * Math.PI / 5;
+        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = + MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 2 * Math.PI / 5;
 
         // Module configuration constants
         public static final int DRIVE_CURRENT_LIMIT = 35;
@@ -93,11 +83,11 @@ public final class Constants {
 
         // Gains vaules for PIDControllers
         public static final class Gains {
-            public static final double kP = 0.2;// .116d;
+            public static final double kP = 0.2;
             public static final double kI = 0d;
             public static final double kD = 0d;
 
-            public static final double kF = 0.55;// 229d;
+            public static final double kF = 0.55;
         }
 
         // Gains vaules for theta PIDControllers
@@ -120,7 +110,6 @@ public final class Constants {
             public static final class Hurley {
                 public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(193.535);
                 public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(145.547);
-                // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(198.721);
                 public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(199.688);
                 public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(210.938);
             }
@@ -151,19 +140,16 @@ public final class Constants {
         public static final double TOLERANCE = 1d;
 
         // Conversion factor for our elevator
-        public static final double GEAR_RATIO = 16d / 1d; // Motor gear reduction / output shaft gear reduction
-        public static final double SPROCKET_DIAMETER = 1.440d;
-        public static final double POSITION_CONVERSION_FACTOR = 1 / GEAR_RATIO * SPROCKET_DIAMETER * Math.PI;
+        public static final double GEAR_RATIO = 16d / 1d; // Motor gear reduction / output shaft gear reduction  //TODO FIND
+        public static final double POSITION_CONVERSION_FACTOR = 1; // TODO find
 
         // Min/max height in inches
         public static final double MAX_EXTENSION = 23.287d; //TODO FIND
         public static final double MIN_EXTENSION = 0d;
 
         // Min and Max power
-        public static final double MIN_POWER = -1d;
-        public static final double MAX_POWER = 1d;
-
-        public static final double LOG_PERIOD = 0.19;
+        public static final double MIN_POWER = -.3d;
+        public static final double MAX_POWER = .3d;
     }
 
 
@@ -196,34 +182,6 @@ public final class Constants {
         }
     }
 
-    // Constants used for auto balancing
-    public static final class AutoBalanceConstants {
-        // Magnitude for being balance
-        public static final double BALANCED_MAGNITUDE = 2.5;
-
-        // Upper and lower magnitude thresholds for checking if we are on the charge station at all
-        public static final double UPPER_MAGNITUDE_THRESHOLD = 11;
-        public static final double LOWER_MAGNITUDE_THRESHOLD = 7;
-        // Min and max speeds for our auto balance
-        public static final double MIN_SPEED_THRESHOLD = 0.35;
-        public static final double MAX_SPEED_THRESHOLD = 1.5;
-
-        // Delay time for our auto balance after falling
-        public static final double DELAY_TIME = 1.5;
-
-        // Target X position for the middle of the charge station
-        public static final double TARGET_X = 3.85;// 3.93;
-
-        //log period for autobalance
-        public static final double LOG_PERIOD = 0.2;
-
-        // Gains for our auto balance
-        public static final double kP = 2;
-        public static final double kI = 0;
-        public static final double kD = 0;
-    }
-
-
     // Constants for autonomous
     public static final class AutonomousConstants {
         // Path planner PIDConstants
@@ -234,8 +192,5 @@ public final class Constants {
         // Max velocity and acceleration for the path planner
         public static final double MAX_VELOCITY = 2;
         public static final double MAX_ACCELERATION = 1;
-        public static final double SERVO_UP = -1d;
-        public static final double SERVO_DOWN = 0.2d;
-
     }
-    }
+}

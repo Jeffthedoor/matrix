@@ -110,8 +110,6 @@ public class Drivetrain extends SubsystemBase {
     /**
      * Creates a new Drivetrain.
      * 
-     * @param limelightBack  The back Limelight
-     * @param limelightFront The front Limelight
      */
     public Drivetrain() {
         // gyro = new AHRS(SPI.Port.kMXP);
