@@ -3,9 +3,7 @@ package frc.robot;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.revrobotics.CANSparkMax.IdleMode;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxLimitSwitch;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -13,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.I2C;
 import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
 
 /**
@@ -25,16 +22,16 @@ public final class Constants {
     public static final double VOLTAGE_COMPENSATION = 12d;
 
     // Path to the blackout directory
-    public static final Path BLACKOUT_PATH = Paths.get("home/lvuser/blackout");
+    public static final Path HOWITZER_PATH = Paths.get("home/lvuser/Howitzer");
 
     // Check if we're on blackout
-    public static final boolean isBlackout() {
-        return BLACKOUT_PATH.toFile().exists();
+    public static final boolean isHowitzer() {
+        return HOWITZER_PATH.toFile().exists();
     }
 
     // Check if we're on gridlock
-    public static final boolean isGridlock() {
-        return !isBlackout();
+    public static final boolean isHurleyBot() {
+        return !isHowitzer();
     }
 
     public static final double COMP_LOG_PERIOD = .33;
@@ -44,7 +41,6 @@ public final class Constants {
         // Ports for the controllers
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final int COPILOT_CONTROLLER_PORT = 1;
-        public static final int BUTTON_PAD_CONTROLLER_PORT = 2;
 
         // Deadband, min, and max power for the controllers
         public static final double DEADBAND = 0.1d;
@@ -120,8 +116,8 @@ public final class Constants {
 
         // Steer offsets for our modules
         public static final class Offsets {
-            // Gridlocks swerve module absolute encoder offsets
-            public static final class Gridlock {
+            // Hurley bot swerve module absolute encoder offsets
+            public static final class Hurley {
                 public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(193.535);
                 public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(145.547);
                 // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(198.721);
@@ -129,8 +125,8 @@ public final class Constants {
                 public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(210.938);
             }
 
-            // Blackouts swerve module absolute encoder offsets
-            public static final class Blackout {
+            // Howitzer swerve module absolute encoder offsets
+            public static final class Howitzer {
                 public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(253.916);
                 public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(222.451);
                 public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(19.688);
@@ -144,8 +140,7 @@ public final class Constants {
         // Motor configuration constants
         public static final boolean MOTOR_INVERT = false;
         public static final int CURRENT_LIMIT = 40;
-        public static final MotorType MOTOR_TYPE = MotorType.kBrushless;
-        public static final IdleMode NEUTRAL_MODE = IdleMode.kBrake;
+        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
 
         // PID gains for our elevator
         public static final double kP = .35d;
@@ -161,7 +156,7 @@ public final class Constants {
         public static final double POSITION_CONVERSION_FACTOR = 1 / GEAR_RATIO * SPROCKET_DIAMETER * Math.PI;
 
         // Min/max height in inches
-        public static final double MAX_EXTENSION = 23.287d;
+        public static final double MAX_EXTENSION = 23.287d; //TODO FIND
         public static final double MIN_EXTENSION = 0d;
 
         // Min and Max power
@@ -169,10 +164,6 @@ public final class Constants {
         public static final double MAX_POWER = 1d;
 
         public static final double LOG_PERIOD = 0.19;
-
-        // Elevator limit switch types
-        public static final SparkMaxLimitSwitch.Type TOP_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
-        public static final SparkMaxLimitSwitch.Type BOTTOM_LIMIT_SWITCH_TYPE = SparkMaxLimitSwitch.Type.kNormallyOpen;
     }
 
 
@@ -199,14 +190,9 @@ public final class Constants {
             public static final int BACK_LEFT_DRIVE_MOTOR = 7;
             public static final int BACK_LEFT_AZIMUTH_MOTOR = 8;
             public static final int BACK_LEFT_CANCODER = 3;
-        }
 
-        public static final class PWM {
-            public static final int SERVO = 0;
-        }
-
-        public static final class i2c { //Lowercase to avoid conflict with wpilib's I2C class
-            public static final I2C.Port COLOR_SENSOR = I2C.Port.kMXP;
+            public static final int ELEVATOR_MOTOR_1 = 10;
+            public static final int ELEVATOR_MOTOR_2 = 11;
         }
     }
 
@@ -252,19 +238,4 @@ public final class Constants {
         public static final double SERVO_DOWN = 0.2d;
 
     }
-
-        public static enum SlotPosition { // Position of each colum of scoring nodes for AutoScoring
-            slot1, slot2, slot3, slot4, slot5, slot6, slot7, slot8, slot9
-        }
-
-        public static final double MAX_ACCELERATION_MUL = 1;
-
-        public static final double CONTROL_LENGTHS = 0.001;
-
-        // Tolerance for auto align
-        public static final double X_TOLERANCE = 7d;
-        public static final double R_TOLERANCE = 5d;
-
-        //Log period auto align
-        public static final double LOG_PERIOD = 0.25;
     }

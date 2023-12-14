@@ -74,10 +74,10 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backRightModule;
 
     // Module steer offsets
-    private double FRONT_LEFT_STEER_OFFSET = Offsets.Gridlock.FRONT_LEFT_STEER_OFFSET;
-    private double BACK_LEFT_STEER_OFFSET = Offsets.Gridlock.BACK_LEFT_STEER_OFFSET;
-    private double FRONT_RIGHT_STEER_OFFSET = Offsets.Gridlock.FRONT_RIGHT_STEER_OFFSET;
-    private double BACK_RIGHT_STEER_OFFSET = Offsets.Gridlock.BACK_RIGHT_STEER_OFFSET;
+    private double FRONT_LEFT_STEER_OFFSET = Offsets.Hurley.FRONT_LEFT_STEER_OFFSET;
+    private double BACK_LEFT_STEER_OFFSET = Offsets.Hurley.BACK_LEFT_STEER_OFFSET;
+    private double FRONT_RIGHT_STEER_OFFSET = Offsets.Hurley.FRONT_RIGHT_STEER_OFFSET;
+    private double BACK_RIGHT_STEER_OFFSET = Offsets.Hurley.BACK_RIGHT_STEER_OFFSET;
 
     // Swerve pose esitmator for odometry
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getYaw2d(), modulePositions);
@@ -118,11 +118,11 @@ public class Drivetrain extends SubsystemBase {
         // Zero our gyro
         zeroHeading();
 
-        if (Constants.isBlackout()) {
-            FRONT_LEFT_STEER_OFFSET = Offsets.Blackout.FRONT_LEFT_STEER_OFFSET;
-            FRONT_RIGHT_STEER_OFFSET = Offsets.Blackout.FRONT_RIGHT_STEER_OFFSET;
-            BACK_LEFT_STEER_OFFSET = Offsets.Blackout.BACK_LEFT_STEER_OFFSET;
-            BACK_RIGHT_STEER_OFFSET = Offsets.Blackout.BACK_RIGHT_STEER_OFFSET;
+        if (Constants.isHowitzer()) {
+            FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
+            FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
+            BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
+            BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
         }
 
         // Set our neo module configurations using drive current, steer current, and

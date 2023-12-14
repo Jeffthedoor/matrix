@@ -1,13 +1,16 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.ManualElevatorControl;
 import frc.robot.commands.SwerveDrive;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Elevator;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.auto.AutonomousCommandFactory;
 
@@ -15,6 +18,7 @@ public class RobotContainer extends LightningContainer {
 
     // Creating our main subsystems
     private static final Drivetrain drivetrain = new Drivetrain();
+    private static final Elevator elevator = new Elevator();
 
     // Creates our controllers and deadzones
     private static final XboxController driver = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
@@ -47,6 +51,8 @@ public class RobotContainer extends LightningContainer {
         drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
         () -> MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND), () -> MathUtil.applyDeadband(-driver.getRightX(), ControllerConstants.DEADBAND),
         () -> driver.getRightTriggerAxis() > 0.25, () -> driver.getLeftTriggerAxis() > 0.25));
+
+        elevator.setDefaultCommand(new ManualElevatorControl(elevator, () -> driver.getRightTriggerAxis(), () -> driver.getLeftTriggerAxis()));
 
     }
 
