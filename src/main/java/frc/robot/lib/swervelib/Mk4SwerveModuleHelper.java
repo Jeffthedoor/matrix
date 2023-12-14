@@ -14,7 +14,9 @@ public final class Mk4SwerveModuleHelper {
                         Mk4ModuleConfiguration configuration) {
                 return new NeoDriveControllerFactoryBuilder()
                                 .withVoltageCompensation(configuration.getNominalVoltage())
-                                .withCurrentLimit(configuration.getDriveCurrentLimit()).build();
+                                .withCurrentLimit(configuration.getDriveCurrentLimit())
+                                .withPidConstants(configuration.getDrivePIDGains())
+                                .build();
         }
 
         private static SteerControllerFactory<?, NeoSteerConfiguration<ThriftyConfig>> getNeoSteerFactory(

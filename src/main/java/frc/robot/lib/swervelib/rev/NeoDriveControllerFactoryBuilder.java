@@ -7,6 +7,7 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import frc.robot.lib.SparkMaxPIDGains;
+import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.lib.swervelib.DriveController;
 import frc.robot.lib.swervelib.DriveControllerFactory;
 import frc.robot.lib.swervelib.ModuleConfiguration;
@@ -110,7 +111,6 @@ public final class NeoDriveControllerFactoryBuilder {
             controller.setFF(FF);
 
             encoder.setPosition(0);
-
         }
 
         @Override

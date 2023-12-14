@@ -97,11 +97,11 @@ public final class Constants {
 
         // Gains vaules for PIDControllers
         public static final class Gains {
-            public static final double kP = 0.6;// .116d;
+            public static final double kP = 0.2;// .116d;
             public static final double kI = 0d;
             public static final double kD = 0d;
 
-            public static final double kF = 0.7;// 229d;
+            public static final double kF = 0.55;// 229d;
         }
 
         // Gains vaules for theta PIDControllers

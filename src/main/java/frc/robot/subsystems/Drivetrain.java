@@ -35,6 +35,7 @@ import frc.robot.Constants.RobotMap;
 import frc.robot.Constants.DrivetrainConstants.Gains;
 import frc.robot.Constants.DrivetrainConstants.HeadingGains;
 import frc.robot.lib.SparkMaxPIDGains;
+import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.lib.shuffleboard.LightningShuffleboardPeriodic;
 
 /**
@@ -295,6 +296,8 @@ public class Drivetrain extends SubsystemBase {
 
             // Normalize the wheel speeds if the magnitude of any wheel is greater than max velocity
             SwerveDriveKinematics.desaturateWheelSpeeds(states, DrivetrainConstants.MAX_VELOCITY_METERS_PER_SECOND);
+
+            LightningShuffleboard.setDouble("drive", "fl speed", frontLeftState.speedMetersPerSecond);
 
             // Sets the states to the modules
             frontLeftModule.set(frontLeftState.speedMetersPerSecond, frontLeftState.angle.getRadians());
