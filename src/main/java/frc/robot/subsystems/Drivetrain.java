@@ -116,12 +116,12 @@ public class Drivetrain extends SubsystemBase {
         // Zero our gyro
         zeroHeading();
 
-        if (Constants.isHowitzer()) {
-            FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
-            FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
-            BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
-            BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
-        }
+        // if (Constants.isHowitzer()) {
+        //     FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
+        //     FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
+        //     BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
+        //     BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
+        // }
 
         // Set our neo module configurations using drive current, steer current, and
         // voltage

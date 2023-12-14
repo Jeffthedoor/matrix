@@ -108,18 +108,18 @@ public final class Constants {
         public static final class Offsets {
             // Hurley bot swerve module absolute encoder offsets
             public static final class Hurley {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(193.535);
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(145.547);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(199.688);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(210.938);
+                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242);
+                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
+                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
+                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
             }
 
             // Howitzer swerve module absolute encoder offsets
             public static final class Howitzer {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(253.916);
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(222.451);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(19.688);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(63.018);
+                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242);
+                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
+                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
+                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
             }
         }
     }
