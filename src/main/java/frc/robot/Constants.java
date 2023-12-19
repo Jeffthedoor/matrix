@@ -3,7 +3,7 @@ package frc.robot;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -63,7 +63,7 @@ public final class Constants {
         // public static final double MAX_VELOCITY_METERS_PER_SECOND = 5676.0 / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction() * SdsModuleConfigurations.MK4I_L2.getWheelDiameter() * Math.PI;
         public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.5;
         public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
-        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = + MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 2 * Math.PI / 5;
+        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = +MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 2 * Math.PI / 5;
 
         // Module configuration constants
         public static final int DRIVE_CURRENT_LIMIT = 35;
@@ -116,10 +116,10 @@ public final class Constants {
 
             // Howitzer swerve module absolute encoder offsets
             public static final class Howitzer {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242);
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
+                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(0);
+                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(0);
+                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(0);
+                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(0);
             }
         }
     }
@@ -129,7 +129,7 @@ public final class Constants {
         // Motor configuration constants
         public static final boolean MOTOR_INVERT = false;
         public static final int CURRENT_LIMIT = 40;
-        public static final NeutralModeValue NEUTRAL_MODE = NeutralModeValue.Brake;
+        public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
 
         // PID gains for our elevator
         public static final double kP = .35d;
@@ -152,7 +152,6 @@ public final class Constants {
         public static final double MAX_POWER = .3d;
     }
 
-
     // RobotMap Constants
     public static final class RobotMap {
         // CAN IDs
@@ -161,24 +160,21 @@ public final class Constants {
             public static final int PDH = 21;
 
             // Front left CanIDs
-            public static final int FRONT_LEFT_DRIVE_MOTOR = 1;
-            public static final int FRONT_LEFT_AZIMUTH_MOTOR = 2;
-            public static final int FRONT_LEFT_CANCODER = 0;
+            public static final int FRONT_LEFT_DRIVE_MOTOR = 3;
+            public static final int FRONT_LEFT_AZIMUTH_MOTOR = 4;
+            public static final int FRONT_LEFT_CANCODER = 10;
             // Front right CanIDs
-            public static final int FRONT_RIGHT_DRIVE_MOTOR = 3;
-            public static final int FRONT_RIGHT_AZIMUTH_MOTOR = 4;
-            public static final int FRONT_RIGHT_CANCODER = 1;
+            public static final int FRONT_RIGHT_DRIVE_MOTOR = 5;
+            public static final int FRONT_RIGHT_AZIMUTH_MOTOR = 6;
+            public static final int FRONT_RIGHT_CANCODER = 11;
             // Back right CanIDs
-            public static final int BACK_RIGHT_DRIVE_MOTOR = 5;
-            public static final int BACK_RIGHT_AZIMUTH_MOTOR = 6;
-            public static final int BACK_RIGHT_CANCODER = 2;
+            public static final int BACK_RIGHT_DRIVE_MOTOR = 7;
+            public static final int BACK_RIGHT_AZIMUTH_MOTOR = 8;
+            public static final int BACK_RIGHT_CANCODER = 12;
             // Back left CanIDs
-            public static final int BACK_LEFT_DRIVE_MOTOR = 7;
-            public static final int BACK_LEFT_AZIMUTH_MOTOR = 8;
-            public static final int BACK_LEFT_CANCODER = 3;
-
-            public static final int ELEVATOR_MOTOR_1 = 10;
-            public static final int ELEVATOR_MOTOR_2 = 11;
+            public static final int BACK_LEFT_DRIVE_MOTOR = 1;
+            public static final int BACK_LEFT_AZIMUTH_MOTOR = 2;
+            public static final int BACK_LEFT_CANCODER = 9;
         }
     }
 
