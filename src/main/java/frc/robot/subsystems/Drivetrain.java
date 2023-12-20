@@ -167,9 +167,9 @@ public class Drivetrain extends SubsystemBase {
                 // Setting states of the modules
                 states = new SwerveModuleState[] {
                         new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontRightModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backRightModule.getPosition().angle)};
+                        new SwerveModuleState(frontRightModule.getDriveVelocity(), frontRightModule.getPosition().angle),
+                        new SwerveModuleState(backLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
+                        new SwerveModuleState(backRightModule.getDriveVelocity(), backRightModule.getPosition().angle)};
 
                 updateOdometry();
                 updateDriveStates(states);
@@ -179,9 +179,9 @@ public class Drivetrain extends SubsystemBase {
             } else {
                 states = new SwerveModuleState[] {
                         new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontRightModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backRightModule.getPosition().angle)};
+                        new SwerveModuleState(frontRightModule.getDriveVelocity(), frontRightModule.getPosition().angle),
+                        new SwerveModuleState(backLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
+                        new SwerveModuleState(backRightModule.getDriveVelocity(), backRightModule.getPosition().angle)};
                 updateOdometry();
             }
         } else {
