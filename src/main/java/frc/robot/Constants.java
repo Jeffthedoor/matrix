@@ -116,10 +116,10 @@ public final class Constants {
 
             // Howitzer swerve module absolute encoder offsets
             public static final class Howitzer {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(0);
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(0);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(0);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(0);
+                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(81.027);
+                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(355.313);
+                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(327.857);
+                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(247.5);
             }
         }
     }
