@@ -22,16 +22,16 @@ public final class Constants {
     public static final double VOLTAGE_COMPENSATION = 12d;
 
     // Path to the blackout directory
-    public static final Path HOWITZER_PATH = Paths.get("home/lvuser/Howitzer");
+    public static final Path HURLEY_PATH = Paths.get("home/lvuser/Hurley");
 
     // Check if we're on blackout
-    public static final boolean isHowitzer() {
-        return HOWITZER_PATH.toFile().exists();
+    public static final boolean isHurley() {
+        return HURLEY_PATH.toFile().exists();
     }
 
     // Check if we're on gridlock
     public static final boolean isHurleyBot() {
-        return !isHowitzer();
+        return !isHurley();
     }
 
     // Constants for xbox controlers
@@ -108,7 +108,7 @@ public final class Constants {
         public static final class Offsets {
             // Hurley bot swerve module absolute encoder offsets
             public static final class Hurley {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242);
+                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TDO refind
                 public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
                 public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
                 public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
@@ -122,34 +122,6 @@ public final class Constants {
                 public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(58.886);
             }
         }
-    }
-
-    // Constants for our elevator
-    public static final class ElevatorConstants {
-        // Motor configuration constants
-        public static final boolean MOTOR_INVERT = false;
-        public static final int CURRENT_LIMIT = 40;
-        public static final NeutralMode NEUTRAL_MODE = NeutralMode.Brake;
-
-        // PID gains for our elevator
-        public static final double kP = .35d;
-        public static final double kI = 0d;
-        public static final double kD = 0d;
-        public static final double kF = 0.007d;
-
-        public static final double TOLERANCE = 1d;
-
-        // Conversion factor for our elevator
-        public static final double GEAR_RATIO = 16d / 1d; // Motor gear reduction / output shaft gear reduction  //TODO FIND
-        public static final double POSITION_CONVERSION_FACTOR = 1; // TODO find
-
-        // Min/max height in inches
-        public static final double MAX_EXTENSION = 23.287d; //TODO FIND
-        public static final double MIN_EXTENSION = 0d;
-
-        // Min and Max power
-        public static final double MIN_POWER = -.3d;
-        public static final double MAX_POWER = .3d;
     }
 
     // RobotMap Constants

@@ -118,12 +118,12 @@ public class Drivetrain extends SubsystemBase {
         // Zero our gyro
         zeroHeading();
 
-        // if (Constants.isHowitzer()) {
-        //     FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
-        //     FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
-        //     BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
-        //     BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
-        // }
+        if (Constants.isHurley()) {
+            FRONT_LEFT_STEER_OFFSET = Offsets.Hurley.FRONT_LEFT_STEER_OFFSET;
+            FRONT_RIGHT_STEER_OFFSET = Offsets.Hurley.FRONT_RIGHT_STEER_OFFSET;
+            BACK_LEFT_STEER_OFFSET = Offsets.Hurley.BACK_LEFT_STEER_OFFSET;
+            BACK_RIGHT_STEER_OFFSET = Offsets.Hurley.BACK_RIGHT_STEER_OFFSET;
+        }
 
         // Set our neo module configurations using drive current, steer current, and
         // voltage
@@ -131,6 +131,8 @@ public class Drivetrain extends SubsystemBase {
         swerveConfiguration.setSteerCurrentLimit(DrivetrainConstants.STEER_CURRENT_LIMIT);
         swerveConfiguration.setNominalVoltage(DrivetrainConstants.NOMINAL_VOLTAGE);
         swerveConfiguration.setDrivePIDGains(new SparkMaxPIDGains(Gains.kP, Gains.kI, Gains.kD, Gains.kF));
+        
+        //TODO switch to MK4 if using Hurley bot
 
         // Making front left module
         frontLeftModule = Mk3SwerveModuleHelper.createNeo(tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0), swerveConfiguration,
