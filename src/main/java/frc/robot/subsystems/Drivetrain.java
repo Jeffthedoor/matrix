@@ -5,6 +5,8 @@ import java.util.function.Supplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import frc.robot.lib.swervelib.Mk3ModuleConfiguration;
+import frc.robot.lib.swervelib.Mk3SwerveModuleHelper;
 import frc.robot.lib.swervelib.Mk4ModuleConfiguration;
 import frc.robot.lib.swervelib.Mk4SwerveModuleHelper;
 import frc.robot.lib.swervelib.SwerveModule;
@@ -74,10 +76,10 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveModule backRightModule;
 
     // Module steer offsets
-    private double FRONT_LEFT_STEER_OFFSET = Offsets.Hurley.FRONT_LEFT_STEER_OFFSET;
-    private double BACK_LEFT_STEER_OFFSET = Offsets.Hurley.BACK_LEFT_STEER_OFFSET;
-    private double FRONT_RIGHT_STEER_OFFSET = Offsets.Hurley.FRONT_RIGHT_STEER_OFFSET;
-    private double BACK_RIGHT_STEER_OFFSET = Offsets.Hurley.BACK_RIGHT_STEER_OFFSET;
+    private double FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
+    private double BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
+    private double FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
+    private double BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
 
     // Swerve pose esitmator for odometry
     SwerveDriveOdometry odometry = new SwerveDriveOdometry(kinematics, getYaw2d(), modulePositions);
@@ -85,7 +87,7 @@ public class Drivetrain extends SubsystemBase {
     // Creates our drivetrain shuffleboard tab for displaying module data and a periodic shuffleboard for data that doesn't need constant updates
     private ShuffleboardTab tab = Shuffleboard.getTab("Drivetrain");
     private LightningShuffleboardPeriodic periodicShuffleboard;
-    private final Mk4ModuleConfiguration swerveConfiguration = new Mk4ModuleConfiguration();
+    private final Mk3ModuleConfiguration swerveConfiguration = new Mk3ModuleConfiguration();
 
     // PIDController for heading compenstation
     private final PIDController headingController = new PIDController(HeadingGains.kP, HeadingGains.kI, HeadingGains.kD);
@@ -116,12 +118,12 @@ public class Drivetrain extends SubsystemBase {
         // Zero our gyro
         zeroHeading();
 
-        // if (Constants.isHowitzer()) {
-        //     FRONT_LEFT_STEER_OFFSET = Offsets.Howitzer.FRONT_LEFT_STEER_OFFSET;
-        //     FRONT_RIGHT_STEER_OFFSET = Offsets.Howitzer.FRONT_RIGHT_STEER_OFFSET;
-        //     BACK_LEFT_STEER_OFFSET = Offsets.Howitzer.BACK_LEFT_STEER_OFFSET;
-        //     BACK_RIGHT_STEER_OFFSET = Offsets.Howitzer.BACK_RIGHT_STEER_OFFSET;
-        // }
+        if (Constants.isHurley()) {
+            FRONT_LEFT_STEER_OFFSET = Offsets.Hurley.FRONT_LEFT_STEER_OFFSET;
+            FRONT_RIGHT_STEER_OFFSET = Offsets.Hurley.FRONT_RIGHT_STEER_OFFSET;
+            BACK_LEFT_STEER_OFFSET = Offsets.Hurley.BACK_LEFT_STEER_OFFSET;
+            BACK_RIGHT_STEER_OFFSET = Offsets.Hurley.BACK_RIGHT_STEER_OFFSET;
+        }
 
         // Set our neo module configurations using drive current, steer current, and
         // voltage
@@ -129,22 +131,24 @@ public class Drivetrain extends SubsystemBase {
         swerveConfiguration.setSteerCurrentLimit(DrivetrainConstants.STEER_CURRENT_LIMIT);
         swerveConfiguration.setNominalVoltage(DrivetrainConstants.NOMINAL_VOLTAGE);
         swerveConfiguration.setDrivePIDGains(new SparkMaxPIDGains(Gains.kP, Gains.kI, Gains.kD, Gains.kF));
+        
+        //TODO switch to MK4 if using Hurley bot
 
         // Making front left module
-        frontLeftModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0), swerveConfiguration,
-                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_LEFT_DRIVE_MOTOR, RobotMap.CAN.FRONT_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_LEFT_CANCODER, FRONT_LEFT_STEER_OFFSET);
+        frontLeftModule = Mk3SwerveModuleHelper.createNeo(tab.getLayout("Front Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(0, 0), swerveConfiguration,
+                Mk3SwerveModuleHelper.GearRatio.STANDARD, RobotMap.CAN.FRONT_LEFT_DRIVE_MOTOR, RobotMap.CAN.FRONT_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_LEFT_CANCODER, FRONT_LEFT_STEER_OFFSET);
 
         // Making front right module
-        frontRightModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0), swerveConfiguration,
-                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.FRONT_RIGHT_DRIVE_MOTOR, RobotMap.CAN.FRONT_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_RIGHT_CANCODER, FRONT_RIGHT_STEER_OFFSET);
+        frontRightModule = Mk3SwerveModuleHelper.createNeo(tab.getLayout("Front Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(2, 0), swerveConfiguration,
+                Mk3SwerveModuleHelper.GearRatio.STANDARD, RobotMap.CAN.FRONT_RIGHT_DRIVE_MOTOR, RobotMap.CAN.FRONT_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.FRONT_RIGHT_CANCODER, FRONT_RIGHT_STEER_OFFSET);
 
         // Making backleft module
-        backLeftModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0), swerveConfiguration,
-                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_LEFT_DRIVE_MOTOR, RobotMap.CAN.BACK_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_LEFT_CANCODER, BACK_LEFT_STEER_OFFSET);
+        backLeftModule = Mk3SwerveModuleHelper.createNeo(tab.getLayout("Back Left Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(4, 0), swerveConfiguration,
+                Mk3SwerveModuleHelper.GearRatio.STANDARD, RobotMap.CAN.BACK_LEFT_DRIVE_MOTOR, RobotMap.CAN.BACK_LEFT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_LEFT_CANCODER, BACK_LEFT_STEER_OFFSET);
 
         // Making back right module
-        backRightModule = Mk4SwerveModuleHelper.createNeo(tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0), swerveConfiguration,
-                Mk4SwerveModuleHelper.GearRatio.L2, RobotMap.CAN.BACK_RIGHT_DRIVE_MOTOR, RobotMap.CAN.BACK_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_RIGHT_CANCODER, BACK_RIGHT_STEER_OFFSET);
+        backRightModule = Mk3SwerveModuleHelper.createNeo(tab.getLayout("Back Right Module", BuiltInLayouts.kList).withSize(2, 4).withPosition(6, 0), swerveConfiguration,
+                Mk3SwerveModuleHelper.GearRatio.STANDARD, RobotMap.CAN.BACK_RIGHT_DRIVE_MOTOR, RobotMap.CAN.BACK_RIGHT_AZIMUTH_MOTOR, RobotMap.CAN.BACK_RIGHT_CANCODER, BACK_RIGHT_STEER_OFFSET);
 
         initialTimeStamp = Timer.getFPGATimestamp();
 
@@ -165,9 +169,9 @@ public class Drivetrain extends SubsystemBase {
                 // Setting states of the modules
                 states = new SwerveModuleState[] {
                         new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontRightModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backRightModule.getPosition().angle)};
+                        new SwerveModuleState(frontRightModule.getDriveVelocity(), frontRightModule.getPosition().angle),
+                        new SwerveModuleState(backLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
+                        new SwerveModuleState(backRightModule.getDriveVelocity(), backRightModule.getPosition().angle)};
 
                 updateOdometry();
                 updateDriveStates(states);
@@ -177,9 +181,9 @@ public class Drivetrain extends SubsystemBase {
             } else {
                 states = new SwerveModuleState[] {
                         new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontRightModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
-                        new SwerveModuleState(frontLeftModule.getDriveVelocity(), backRightModule.getPosition().angle)};
+                        new SwerveModuleState(frontRightModule.getDriveVelocity(), frontRightModule.getPosition().angle),
+                        new SwerveModuleState(backLeftModule.getDriveVelocity(), backLeftModule.getPosition().angle),
+                        new SwerveModuleState(backRightModule.getDriveVelocity(), backRightModule.getPosition().angle)};
                 updateOdometry();
             }
         } else {
