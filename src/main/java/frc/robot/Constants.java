@@ -147,6 +147,8 @@ public final class Constants {
             public static final int BACK_LEFT_DRIVE_MOTOR = 1;
             public static final int BACK_LEFT_AZIMUTH_MOTOR = 2;
             public static final int BACK_LEFT_CANCODER = 9;
+
+            public static final int COLLECTOR_MOTOR = 13;
         }
     }
 

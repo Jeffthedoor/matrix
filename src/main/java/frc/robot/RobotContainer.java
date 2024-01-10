@@ -7,7 +7,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.AutonomousConstants;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.commands.Collect;
 import frc.robot.commands.SwerveDrive;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.auto.AutonomousCommandFactory;
@@ -16,7 +18,8 @@ public class RobotContainer extends LightningContainer {
 
     // Creating our main subsystems
     private static final Drivetrain drivetrain = new Drivetrain();
-
+    private static final Collector collector = new Collector();
+    
     // Creates our controllers and deadzones
     private static final XboxController driver = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
 
@@ -37,6 +40,8 @@ public class RobotContainer extends LightningContainer {
         new Trigger(() -> driver.getPOV() == 180).onTrue(new InstantCommand(drivetrain::flipBL, drivetrain));
         new Trigger(() -> driver.getPOV() == 90).onTrue(new InstantCommand(drivetrain::flipBR, drivetrain));
         new Trigger(() -> driver.getPOV() == 270).onTrue(new InstantCommand(drivetrain::flipFL, drivetrain));
+
+    
     }
 
     // Creates the autonomous commands
@@ -48,6 +53,8 @@ public class RobotContainer extends LightningContainer {
         drivetrain.setDefaultCommand(new SwerveDrive(drivetrain, () -> MathUtil.applyDeadband(driver.getLeftX(), ControllerConstants.DEADBAND),
         () -> MathUtil.applyDeadband(driver.getLeftY(), ControllerConstants.DEADBAND), () -> MathUtil.applyDeadband(-driver.getRightX(), ControllerConstants.DEADBAND),
         () -> driver.getRightTriggerAxis() > 0.25, () -> driver.getLeftTriggerAxis() > 0.25));
+
+        collector.setDefaultCommand(new Collect(()-> (driver.getRightTriggerAxis() - driver.getLeftTriggerAxis()), collector));
     }
 
     @Override
