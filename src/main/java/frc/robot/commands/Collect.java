@@ -12,6 +12,7 @@ public class Collect extends CommandBase {
 
     public Collect(DoubleSupplier pow, Collector collector) {
         this.pow = pow;
+        this.collector = collector;
 
         addRequirements(collector);
     }

@@ -75,16 +75,16 @@ public class SwerveDrive extends CommandBase {
         // Calcaulate new linear components
         Translation2d linearVelocity = new Pose2d(new Translation2d(), linearDirection).transformBy(new Transform2d(new Translation2d(linearMagnitude, 0.0), new Rotation2d())).getTranslation();
 
-        if (!robotCentric.getAsBoolean()) { // Changes from field relative to robot relative to help with line up
-            drivetrain.drive(
-                    // Supply chassie speeds from the translation suppliers using feild relative control
-                    // TODO: x and y fliped
-                    ChassisSpeeds.fromFieldRelativeSpeeds(drivetrain.percentOutputToMetersPerSecond(-linearVelocity.getX()), drivetrain.percentOutputToMetersPerSecond(linearVelocity.getY()),
-                            drivetrain.percentOutputToRadiansPerSecond(rightX), drivetrain.getYaw2d()));
-        } else {
+        // if (!robotCentric.getAsBoolean()) { // Changes from field relative to robot relative to help with line up
+        //     drivetrain.drive(
+        //             // Supply chassie speeds from the translation suppliers using feild relative control
+        //             // TODO: x and y fliped
+        //             ChassisSpeeds.fromFieldRelativeSpeeds(drivetrain.percentOutputToMetersPerSecond(-linearVelocity.getX()), drivetrain.percentOutputToMetersPerSecond(linearVelocity.getY()),
+        //                     drivetrain.percentOutputToRadiansPerSecond(rightX), drivetrain.getYaw2d()));
+        // } else {
             // create robot relative speeds
             drivetrain.drive(new ChassisSpeeds(drivetrain.percentOutputToMetersPerSecond(-linearVelocity.getY()), drivetrain.percentOutputToMetersPerSecond(-linearVelocity.getX()), drivetrain.percentOutputToRadiansPerSecond(rightX)));
-        }
+        // }
     }
 
     @Override
