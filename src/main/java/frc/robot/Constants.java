@@ -30,7 +30,7 @@ public final class Constants {
     }
 
     // Check if we're on gridlock
-    public static final boolean isHurleyBot() {
+    public static final boolean isHowitzer() {
         return !isHurley();
     }
 
@@ -48,80 +48,22 @@ public final class Constants {
 
     // Constants for our drivetrain
     public static final class DrivetrainConstants {
-        // Our drivetrain track width and Wheelbase
-        public static final double DRIVETRAIN_TRACKWIDTH_METERS = Units.inchesToMeters(20.8125d); //TODO FIND and get for each bot
-        public static final double DRIVETRAIN_WHEELBASE_METERS = Units.inchesToMeters(20.8125d);
+        public static final double AZIMUTH_RATIO = 1.0d; //TODO: find ratio
 
-        // Module resting/default angles
-        public static final double FRONT_LEFT_RESTING_ANGLE = Math.toRadians(-45d);
-        public static final double FRONT_RIGHT_RESTING_ANGLE = Math.toRadians(45d);
-        public static final double BACK_LEFT_RESTING_ANGLE = Math.toRadians(45d);
-        public static final double BACK_RIGHT_RESTING_ANGLE = Math.toRadians(-45d);
+        public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
-        // Our max voltage, velocity, angular velocity, and angular acceleration
-        public static final double MAX_VOLTAGE = 12;
-        // public static final double MAX_VELOCITY_METERS_PER_SECOND = 5676.0 / 60.0 * SdsModuleConfigurations.MK4I_L2.getDriveReduction() * SdsModuleConfigurations.MK4I_L2.getWheelDiameter() * Math.PI;
-        public static final double MAX_VELOCITY_METERS_PER_SECOND = 4.5;
-        public static final double MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND = MAX_VELOCITY_METERS_PER_SECOND / Math.hypot(DRIVETRAIN_TRACKWIDTH_METERS / 2.0, DRIVETRAIN_WHEELBASE_METERS / 2.0);
-        public static final double MAX_ANGULAR_ACCELERATION_RADIANS_PER_SECOND = +MAX_ANGULAR_VELOCITY_RADIANS_PER_SECOND * 2 * Math.PI / 5;
+        public static final double DRIVE_RATIO = 6.8571;
 
-        // Module configuration constants
-        public static final int DRIVE_CURRENT_LIMIT = 35;
-        public static final int STEER_CURRENT_LIMIT = 30;
-        public static final double NOMINAL_VOLTAGE = 12d;
-
-        public static final double LOG_PERIOD = 0.18;
-
-        public static final double SLOW_MODE_TRANSLATIONAL_MULT = 0.7;
-        public static final double SLOW_MODE_ROTATIONAL_MULT = 0.5;
-
-        // Pigeon heading offset
-        public static final Rotation2d HEADING_OFFSET = Rotation2d.fromDegrees(90);
-
-        // Standard dev for robot pose
-        public static final Matrix<N3, N1> STANDARD_DEV_POSE_MATRIX = VecBuilder.fill(0.1, 0.1, 0.1);
-
-        // Gains vaules for PIDControllers
-        public static final class Gains {
-            public static final double kP = 0.2;
-            public static final double kI = 0d;
-            public static final double kD = 0d;
-
-            public static final double kF = 0.55;
-        }
-
-        // Gains vaules for theta PIDControllers
-        public static final class ThetaGains {
-            public static final double kP = 0d;
-            public static final double kI = 0d;
-            public static final double kD = 0d;
-        }
-
-        // PID gains for our heading compensation
-        public static final class HeadingGains {
-            public static final double kP = 0.005d;
-            public static final double kI = 0d;
-            public static final double kD = 0d;
-        }
-
-        // Steer offsets for our modules
-        public static final class Offsets {
-            // Hurley bot swerve module absolute encoder offsets
-            public static final class Hurley {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TDO refind
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
-            }
-
-            // Howitzer swerve module absolute encoder offsets
-            public static final class Howitzer {
-                public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(347.695);
-                public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(1.406);
-                public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(12.392);
-                public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(58.886);
-            }
-        }
+        public static final double MAX_SPEED = Units.feetToMeters(14.4);
+        // Hurley offsets
+        // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TDO refind
+        // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
+        // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
+        // public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
+        public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(347.695);
+        public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(1.406);
+        public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(12.392);
+        public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(58.886);
     }
 
     // RobotMap Constants
