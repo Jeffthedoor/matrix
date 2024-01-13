@@ -25,7 +25,6 @@ import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.SwerveAutoBuilder;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveMath;
-import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
 
@@ -42,7 +41,7 @@ public class Drivetrain extends SubsystemBase {
 
         double driveConversionFactor = SwerveMath.calculateMetersPerRotation(DrivetrainConstants.WHEEL_DIAMETER, DrivetrainConstants.DRIVE_RATIO, 1);
         try {
-            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(maxSpeed);
+            swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(maxSpeed, angleConversionFactor, driveConversionFactor);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
