@@ -42,6 +42,7 @@ public final class Constants {
 
         // Deadband, min, and max power for the controllers
         public static final double DEADBAND = 0.1d;
+        public static final double FLICKSTICK_DEADBAND = 0.5d;
         public static final double MIN_POWER = 0d;
         public static final double MAX_POWER = 1d;
     }
