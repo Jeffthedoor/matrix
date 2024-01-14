@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.lib.LightningContainer;
-import frc.robot.subsytems.Drivetrain;
+import frc.robot.subsystems.Drivetrain;
 
 public class RobotContainer extends LightningContainer {
     private final Drivetrain drivetrain = new Drivetrain();

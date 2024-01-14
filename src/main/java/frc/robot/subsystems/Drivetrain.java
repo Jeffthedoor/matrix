@@ -1,4 +1,4 @@
-package frc.robot.subsytems;
+package frc.robot.subsystems;
 
 import java.io.File;
 import java.io.IOException;

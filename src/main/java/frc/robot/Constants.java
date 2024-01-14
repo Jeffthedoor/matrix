@@ -12,6 +12,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
+import swervelib.parser.PIDFConfig;
 
 /**
  * Class to hold all of the constants for the robot
@@ -65,6 +66,16 @@ public final class Constants {
         public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(1.406);
         public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(12.392);
         public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(58.886);
+
+        public static final class AutonConstants {
+            //TODO: copy pasted values, need to be changed
+            public static final PIDFConfig xAutoPID     = new PIDFConfig(0.7, 0, 0);
+            public static final PIDFConfig yAutoPID     = new PIDFConfig(0.7, 0, 0);
+            public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
+
+            public static final double AUTO_MAX_SPEED = DrivetrainConstants.MAX_SPEED;
+            public static final double MAX_ACCELERATION = 2d;
+        }
     }
 
     // RobotMap Constants
