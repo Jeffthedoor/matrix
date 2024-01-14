@@ -1,10 +1,9 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.lib.LightningContainer;
@@ -17,8 +16,8 @@ public class RobotContainer extends LightningContainer {
 
     @Override
     protected void configureButtonBindings() {
-        new JoystickButton(driverController, XboxController.Button.kStart.value).onTrue(new InstantCommand(drivetrain::zeroGyro));
-        new JoystickButton(driverController, XboxController.Button.kX.value).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
+        new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
+        new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
     }
 
     @Override
