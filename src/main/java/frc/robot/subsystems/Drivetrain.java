@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
@@ -36,15 +37,17 @@ public class Drivetrain extends SubsystemBase {
     private SwerveAutoBuilder autoBuilder;
 
     public Drivetrain() {
-
+        
         double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(DrivetrainConstants.AZIMUTH_RATIO, 1);
 
         double driveConversionFactor = SwerveMath.calculateMetersPerRotation(DrivetrainConstants.WHEEL_DIAMETER, DrivetrainConstants.DRIVE_RATIO, 1);
         try {
             swerveDrive = new SwerveParser(new File(Filesystem.getDeployDirectory(), "swerve")).createSwerveDrive(maxSpeed, angleConversionFactor, driveConversionFactor);
         } catch (IOException e) {
+            System.out.println(e);
             throw new RuntimeException(e);
         }
+        CommandScheduler.getInstance().registerSubsystem(this);
     }
 
     /**
