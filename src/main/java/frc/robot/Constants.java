@@ -50,7 +50,7 @@ public final class Constants {
 
     // Constants for our drivetrain
     public static final class DrivetrainConstants {
-        public static final double AZIMUTH_RATIO = 1.0d; //TODO: find ratio
+        public static final double AZIMUTH_RATIO = 14.2587d;
 
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
@@ -58,7 +58,7 @@ public final class Constants {
 
         public static final double MAX_SPEED = Units.feetToMeters(14.4);
         // Hurley offsets
-        // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TDO refind
+        // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TODO refind
         // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
         // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
         // public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
