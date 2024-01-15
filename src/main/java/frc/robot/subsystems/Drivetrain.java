@@ -37,7 +37,7 @@ public class Drivetrain extends SubsystemBase {
 
     public Drivetrain() {
 
-        double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(maxSpeed, DrivetrainConstants.AZIMUTH_RATIO);
+        double angleConversionFactor = SwerveMath.calculateDegreesPerSteeringRotation(DrivetrainConstants.AZIMUTH_RATIO, 1);
 
         double driveConversionFactor = SwerveMath.calculateMetersPerRotation(DrivetrainConstants.WHEEL_DIAMETER, DrivetrainConstants.DRIVE_RATIO, 1);
         try {
