@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.Constants.DrivetrainConstants.AutonConstants;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.lib.shuffleboard.LightningShuffleboardPeriodic;
 import swervelib.SwerveController;
@@ -72,10 +73,10 @@ public class Drivetrain extends SubsystemBase {
 			this::getRobotVelocity, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
 			this::drive, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
 			new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-				new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-				new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-				4.5, // Max module speed, in m/s
-				0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+				AutonConstants.TRANSLATION_PID, // Translation PID constants
+				AutonConstants.ROTATION_PID, // Rotation PID constants
+				DrivetrainConstants.MAX_SPEED, // Max module speed, in m/s
+				DrivetrainConstants.DRIVE_BASE_RADIUS, // Drive base radius in meters. Distance from robot center to furthest module.
 				new ReplanningConfig() // Default path replanning config. See the API for the options here
 				), () -> {
 					// Boolean supplier that controls when the path will be mirrored for the red

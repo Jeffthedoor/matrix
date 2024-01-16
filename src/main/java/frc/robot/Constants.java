@@ -2,7 +2,7 @@ package frc.robot;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.util.Units;
 import swervelib.parser.PIDFConfig;
 
@@ -49,6 +49,9 @@ public final class Constants {
         public static final double DRIVE_RATIO = 6.8571;
 
         public static final double MAX_SPEED = Units.feetToMeters(14.4);
+
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(15); // TODO make the right value for each bot
+        
         // Hurley offsets
         // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TODO refind
         // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
@@ -62,9 +65,8 @@ public final class Constants {
 
         public static final class AutonConstants {
             //TODO: copy pasted values, need to be changed
-            public static final PIDFConfig xAutoPID     = new PIDFConfig(0.7, 0, 0);
-            public static final PIDFConfig yAutoPID     = new PIDFConfig(0.7, 0, 0);
-            public static final PIDFConfig angleAutoPID = new PIDFConfig(0.4, 0, 0.01);
+            public static final PIDConstants TRANSLATION_PID = new PIDConstants(5.0, 0.0, 0.0);
+            public static final PIDConstants ROTATION_PID = new PIDConstants(5.0, 0.0, 0.0);
 
             public static final double AUTO_MAX_SPEED = DrivetrainConstants.MAX_SPEED;
             public static final double MAX_ACCELERATION = 2d;
