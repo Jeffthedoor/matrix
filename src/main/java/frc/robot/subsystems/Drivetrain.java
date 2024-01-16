@@ -7,9 +7,12 @@ import java.util.Map;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.Timer;
@@ -23,8 +26,11 @@ import frc.robot.lib.pathplanner.com.pathplanner.lib.PathPlanner;
 import frc.robot.lib.pathplanner.com.pathplanner.lib.PathPlannerTrajectory;
 import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
 import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.SwerveAutoBuilder;
+import frc.robot.lib.shuffleboard.LightningShuffleboard;
+import frc.robot.lib.shuffleboard.LightningShuffleboardPeriodic;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
@@ -47,7 +53,14 @@ public class Drivetrain extends SubsystemBase {
             System.out.println(e);
             throw new RuntimeException(e);
         }
+
+        swerveDrive.setGyroOffset(new Rotation3d(0, 0, 0));
+        swerveDrive.zeroGyro();
+
+
         CommandScheduler.getInstance().registerSubsystem(this);
+
+
     }
 
     /**
@@ -144,6 +157,8 @@ public class Drivetrain extends SubsystemBase {
   public void zeroGyro()
   {
     swerveDrive.zeroGyro();
+    swerveDrive.setGyroOffset(new Rotation3d(0, 0, 0));
+
   }
 
   /**
@@ -154,6 +169,10 @@ public class Drivetrain extends SubsystemBase {
   public void setMotorBrake(boolean brake)
   {
     swerveDrive.setMotorIdleMode(brake);
+  }
+
+  public SwerveModule[] getSwerveModules(){
+    return swerveDrive.getModules();
   }
 
   /**
@@ -309,5 +328,18 @@ public class Drivetrain extends SubsystemBase {
     }
 
     return autoBuilder.fullAuto(pathGroup);
+  }
+
+  @Override
+    public void periodic(){
+        SwerveModule[] states = getSwerveModules();
+        LightningShuffleboard.setDouble("Drivetrain","FrontRightAngle", states[1].getAbsolutePosition());
+        LightningShuffleboard.setDouble("Drivetrain", "FrontLeftAngle", states[0].getAbsolutePosition());
+        LightningShuffleboard.setDouble("Drivetrain","BackRightAngle", states[3].getAbsolutePosition());
+        LightningShuffleboard.setDouble("Drivetrain","BackLeftAngle", states[2].getAbsolutePosition());
+
+        LightningShuffleboard.setDouble("Drivetrain", "Odo Roll", swerveDrive.getRoll().getDegrees());
+        LightningShuffleboard.setDouble("Drivetrain", "Odo Yaw", swerveDrive.getYaw().getDegrees());
+
   }
 }

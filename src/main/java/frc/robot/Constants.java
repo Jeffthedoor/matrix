@@ -43,7 +43,7 @@ public final class Constants {
 
         // Deadband, min, and max power for the controllers
         public static final double DEADBAND = 0.1d;
-        public static final double FLICKSTICK_DEADBAND = 0.5d;
+        public static final double FLICKSTICK_DEADBAND = 0.15d;
         public static final double MIN_POWER = 0d;
         public static final double MAX_POWER = 1d;
     }
@@ -62,10 +62,11 @@ public final class Constants {
         // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
         // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
         // public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
-        public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(347.695);
-        public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(1.406);
-        public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(12.392);
-        public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(58.886);
+        public static final double FRONT_LEFT_STEER_OFFSET = 244.77;
+        public static final double FRONT_RIGHT_STEER_OFFSET = 335.923;
+        public static final double BACK_LEFT_STEER_OFFSET = 31.632;
+        public static final double BACK_RIGHT_STEER_OFFSET = 211.53;
+
 
         public static final class AutonConstants {
             //TODO: copy pasted values, need to be changed

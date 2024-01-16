@@ -7,15 +7,19 @@ package frc.robot.commands;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
+import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.subsystems.Drivetrain;
 
 import java.util.List;
 import java.util.function.DoubleSupplier;
 import swervelib.SwerveController;
+import swervelib.SwerveModule;
 import swervelib.math.SwerveMath;
 
 /**
@@ -58,6 +62,8 @@ public class AbsoluteDrive extends CommandBase
     this.headingHorizontal = headingHorizontal;
     this.headingVertical = headingVertical;
 
+
+
     addRequirements(swerve);
   }
 
@@ -97,7 +103,7 @@ public class AbsoluteDrive extends CommandBase
     // translation = SwerveMath.limitVelocity(translation, swerve.getFieldVelocity(), swerve.getPose(),
     //                                        DrivetrainConstants.LOOP_TIME, Constants.ROBOT_MASS, List.of(Constants.CHASSIS),
     //                                        swerve.getSwerveDriveConfiguration());
-    SmartDashboard.putNumber("LimitedTranslation", translation.getX());
+    LightningShuffleboard.setDouble("AbsoluteDrive", "LimitedTranslation", translation.getX());
     SmartDashboard.putString("Translation", translation.toString());
 
     // Make the robot move
