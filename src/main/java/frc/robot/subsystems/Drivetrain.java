@@ -21,11 +21,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.DrivetrainConstants;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.PathConstraints;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.PathPlanner;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.PathPlannerTrajectory;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.SwerveAutoBuilder;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.lib.shuffleboard.LightningShuffleboardPeriodic;
 import swervelib.SwerveController;
@@ -39,8 +34,6 @@ public class Drivetrain extends SubsystemBase {
     private final SwerveDrive swerveDrive;
 
     public final double maxSpeed = DrivetrainConstants.MAX_SPEED;
-
-    private SwerveAutoBuilder autoBuilder;
 
     public Drivetrain() {
         
@@ -300,35 +293,9 @@ public class Drivetrain extends SubsystemBase {
    * @param useAllianceColor Automatically transform the path based on alliance color.
    * @return PathPlanner command to follow the given path.
    */
-  public Command creatPathPlannerCommand(String path, PathConstraints constraints, Map<String, Command> eventMap,
-                                         PIDConstants translation, PIDConstants rotation, PIDConstants pose, boolean useAllianceColor)
-  {
-    List<PathPlannerTrajectory> pathGroup = PathPlanner.loadPathGroup(path, constraints);
-//    SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(
-//      Pose2d supplier,
-//      Pose2d consumer- used to reset odometry at the beginning of auto,
-//      PID constants to correct for translation error (used to create the X and Y PID controllers),
-//      PID constants to correct for rotation error (used to create the rotation controller),
-//      Module states consumer used to output to the drive subsystem,
-//      Should the path be automatically mirrored depending on alliance color. Optional- defaults to true
-//   )
-    if (autoBuilder == null)
-    {
-      autoBuilder = new SwerveAutoBuilder(
-          swerveDrive::getPose,
-          swerveDrive::resetOdometry,
-          translation,
-          rotation,
-          pose,
-          swerveDrive::setChassisSpeeds,
-          eventMap,
-          useAllianceColor,
-          this
-      );
-    }
-
-    return autoBuilder.fullAuto(pathGroup);
-  }
+  // public Command creatPathPlannerCommand(String path, PathConstraints constraints, Map<String, Command> eventMap,
+  //                                        PIDConstants translation, PIDConstants rotation, PIDConstants pose, boolean useAllianceColor)
+  // {
 
   @Override
     public void periodic(){

@@ -11,7 +11,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-import frc.robot.lib.pathplanner.com.pathplanner.lib.auto.PIDConstants;
 import swervelib.parser.PIDFConfig;
 
 /**
@@ -30,7 +29,7 @@ public final class Constants {
         return HURLEY_PATH.toFile().exists();
     }
 
-    // Check if we're on gridlock
+    // Check if we're on Howitzer
     public static final boolean isHowitzer() {
         return !isHurley();
     }

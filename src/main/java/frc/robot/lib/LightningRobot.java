@@ -7,8 +7,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.lib.auto.Autonomous;
-import frc.robot.lib.auto.AutonomousCommandFactory;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -104,11 +102,6 @@ public class LightningRobot extends TimedRobot {
         } catch (IOException e) {
             System.out.println("Unable to read build version information.");
         }
-        // Load our autonomous chooser to the dashboard
-        Autonomous.load();
-
-        // Connects to the path planner server
-        AutonomousCommandFactory.connectToServer(5811);
     }
 
     /**
@@ -194,7 +187,7 @@ public class LightningRobot extends TimedRobot {
     @Override
     public void autonomousInit() {
         System.out.println("LightningRobot.autonomousInit");
-        autonomousCommand = Autonomous.getAutonomous();
+        autonomousCommand = container.getAutonomousCommands();
         if (autonomousCommand != null)
             autonomousCommand.schedule();
     }
