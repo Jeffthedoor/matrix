@@ -15,6 +15,8 @@ public abstract class LightningContainer {
 
     public LightningContainer() {
 
+        initializeSubsystems();
+
         // Setup driver commands and defaults
         configureButtonBindings();
         configureDefaultCommands();
@@ -31,6 +33,11 @@ public abstract class LightningContainer {
         configureSystemTests();
 
     }
+
+    /**
+     * Initializes all subsystems First
+     */
+    protected abstract void initializeSubsystems();
 
     /**
      * Connects commands with buttons on joysticks
