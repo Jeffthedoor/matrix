@@ -46,22 +46,12 @@ public final class Constants {
 
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
-        public static final double DRIVE_RATIO = 6.8571;
+        public static final double DRIVE_RATIO = 6.746;
 
-        public static final double MAX_SPEED = Units.feetToMeters(14.4);
+        public static final double MAX_SPEED = Units.feetToMeters(15.1);
 
-        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(15); // TODO make the right value for each bot
-        
-        // Hurley offsets
-        // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TODO refind
-        // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
-        // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
-        // public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
-        public static final double FRONT_LEFT_STEER_OFFSET = 244.77;
-        public static final double FRONT_RIGHT_STEER_OFFSET = 335.923;
-        public static final double BACK_LEFT_STEER_OFFSET = 31.632;
-        public static final double BACK_RIGHT_STEER_OFFSET = 211.53;
-
+        //No idea how correct this is, not sure how much it really matters
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(Math.sqrt(2*Math.pow(10.5, 2d)));
 
         public static final class AutonConstants {
             //TODO: copy pasted values, need to be changed
