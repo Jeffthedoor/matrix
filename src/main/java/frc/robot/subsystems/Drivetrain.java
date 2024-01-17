@@ -56,7 +56,7 @@ public class Drivetrain extends SubsystemBase {
 			throw new RuntimeException(e);
 		}
 
-		swerveDrive.setGyroOffset(new Rotation3d(0, 0, 0));
+		swerveDrive.setGyroOffset(DrivetrainConstants.GYRO_OFFSET);
 		swerveDrive.zeroGyro();
 
 

@@ -3,8 +3,9 @@ package frc.robot;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import com.pathplanner.lib.util.PIDConstants;
+
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.util.Units;
-import swervelib.parser.PIDFConfig;
 
 /**
  * Class to hold all of the constants for the robot
@@ -42,25 +43,18 @@ public final class Constants {
 
     // Constants for our drivetrain
     public static final class DrivetrainConstants {
-        public static final double AZIMUTH_RATIO = 14.2587d;
+        public static final Rotation3d GYRO_OFFSET = new Rotation3d(0, 0, Units.degreesToRadians(90));
+
+        public static final double AZIMUTH_RATIO = 12.8;
 
         public static final double WHEEL_DIAMETER = Units.inchesToMeters(4);
 
-        public static final double DRIVE_RATIO = 6.8571;
+        public static final double DRIVE_RATIO = 6.857142857142858;
+
 
         public static final double MAX_SPEED = Units.feetToMeters(14.4);
 
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(15); // TODO make the right value for each bot
-        
-        // Hurley offsets
-        // public static final double FRONT_LEFT_STEER_OFFSET = -Math.toRadians(279.242); //TODO refind
-        // public static final double FRONT_RIGHT_STEER_OFFSET = -Math.toRadians(358.661);
-        // public static final double BACK_LEFT_STEER_OFFSET = -Math.toRadians(357.321);
-        // public static final double BACK_RIGHT_STEER_OFFSET = -Math.toRadians(10.045);
-        public static final double FRONT_LEFT_STEER_OFFSET = 244.77;
-        public static final double FRONT_RIGHT_STEER_OFFSET = 335.923;
-        public static final double BACK_LEFT_STEER_OFFSET = 31.632;
-        public static final double BACK_RIGHT_STEER_OFFSET = 211.53;
 
 
         public static final class AutonConstants {

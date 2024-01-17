@@ -13,7 +13,6 @@ import frc.robot.commands.AbsoluteDrive;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.subsystems.Drivetrain;
-import swervelib.SwerveModule;
 
 public class RobotContainer extends LightningContainer {
     private Drivetrain drivetrain;
