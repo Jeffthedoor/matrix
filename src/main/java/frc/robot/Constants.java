@@ -54,7 +54,8 @@ public final class Constants {
 
         public static final double MAX_SPEED = Units.feetToMeters(14.4);
 
-        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(15); // TODO make the right value for each bot
+        //No idea how well this works :shrug:
+        public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(Math.sqrt(2*Math.pow(13d, 2d)));
 
 
         public static final class AutonConstants {
