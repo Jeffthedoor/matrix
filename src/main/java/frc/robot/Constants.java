@@ -1,31 +1,12 @@
 package frc.robot;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import com.pathplanner.lib.util.PIDConstants;
 import edu.wpi.first.math.util.Units;
-import swervelib.parser.PIDFConfig;
 
 /**
  * Class to hold all of the constants for the robot
  */
 public final class Constants {
-
-    // Spark max voltage compensation
-    public static final double VOLTAGE_COMPENSATION = 12d;
-
-    // Path to the blackout directory
-    public static final Path HURLEY_PATH = Paths.get("home/lvuser/Hurley");
-
-    // Check if we're on blackout
-    public static final boolean isHurley() {
-        return HURLEY_PATH.toFile().exists();
-    }
-
-    // Check if we're on Howitzer
-    public static final boolean isHowitzer() {
-        return !isHurley();
-    }
 
     // Constants for xbox controlers
     public static final class ControllerConstants {
@@ -35,9 +16,6 @@ public final class Constants {
 
         // Deadband, min, and max power for the controllers
         public static final double DEADBAND = 0.1d;
-        public static final double FLICKSTICK_DEADBAND = 0.15d;
-        public static final double MIN_POWER = 0d;
-        public static final double MAX_POWER = 1d;
     }
 
     // Constants for our drivetrain

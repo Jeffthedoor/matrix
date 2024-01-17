@@ -47,8 +47,8 @@ public class RobotContainer extends LightningContainer {
                 drivetrain,
                 () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND),
                 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
-                () -> MathUtil.applyDeadband(-driverController.getRightX(), ControllerConstants.FLICKSTICK_DEADBAND),
-                () -> MathUtil.applyDeadband(-driverController.getRightY(), ControllerConstants.FLICKSTICK_DEADBAND)));
+                () -> -driverController.getRightX(),
+                () -> -driverController.getRightY()));
     }
 
     @Override
