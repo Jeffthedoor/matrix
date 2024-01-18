@@ -10,26 +10,30 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
+import frc.robot.commands.Climb;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Drivetrain;
 import swervelib.SwerveModule;
 
 public class RobotContainer extends LightningContainer {
     private Drivetrain drivetrain;
+    private Climber climber;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
     private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
     @Override
 	protected void initializeSubsystems() {
+        drivetrain = new Drivetrain();
+        climber = new Climber();
 		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
     }
 
     @Override
     protected void configureButtonBindings() {
         
-        this.drivetrain = new Drivetrain();
         drivetrain.zeroGyro();
         new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
         new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
@@ -49,6 +53,9 @@ public class RobotContainer extends LightningContainer {
                 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
                 () -> -driverController.getRightX(),
                 () -> -driverController.getRightY()));
+
+        climber.setDefaultCommand(new Climb(climber, ()-> (driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis())));
+
     }
 
     @Override
