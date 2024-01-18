@@ -11,7 +11,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Climber extends SubsystemBase {
-    TalonFX climbMotor = new TalonFX(15);
+    TalonFX climbMotor = new TalonFX(9);
     
     public Climber() {
         TalonFXConfiguration config = new TalonFXConfiguration();

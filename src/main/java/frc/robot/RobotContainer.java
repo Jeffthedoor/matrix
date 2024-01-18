@@ -22,13 +22,15 @@ public class RobotContainer extends LightningContainer {
     private Climber climber;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
-    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+    // private SendableChooser<Command> autoChooser;
 
     @Override
 	protected void initializeSubsystems() {
         drivetrain = new Drivetrain();
         climber = new Climber();
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+
+		// autoChooser = AutoBuilder.buildAutoChooser();
+		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
     }
 
     @Override
@@ -41,7 +43,8 @@ public class RobotContainer extends LightningContainer {
 
     @Override
     protected Command getAutonomousCommands() {
-        return autoChooser.getSelected();
+        // return autoChooser.getSelected();
+        return null;
     }
 
     @Override
