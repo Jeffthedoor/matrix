@@ -34,6 +34,8 @@ public final class Constants {
         //No idea how well this works :shrug:
         public static final double DRIVE_BASE_RADIUS = Units.inchesToMeters(Math.sqrt(2*Math.pow(13d, 2d)));
 
+        public static final double MAX_ROT_SPEED = 6;
+
 
         public static final class AutonConstants {
             //TODO: copy pasted values, need to be changed

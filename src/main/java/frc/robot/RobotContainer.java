@@ -12,6 +12,7 @@ import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.Collect;
 import frc.robot.commands.Shoot;
+import frc.robot.commands.SimpleDrive;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.subsystems.Collector;
@@ -41,7 +42,6 @@ public class RobotContainer extends LightningContainer {
     protected void configureButtonBindings() {
         
         this.drivetrain = new Drivetrain();
-        drivetrain.zeroGyro();
         new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
         new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
 
@@ -58,12 +58,11 @@ public class RobotContainer extends LightningContainer {
     @Override
     protected void configureDefaultCommands() {
         drivetrain.setDefaultCommand(
-            new AbsoluteDrive(
+            new SimpleDrive(
                 drivetrain,
                 () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND),
                 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
-                () -> -driverController.getRightX(),
-                () -> -driverController.getRightY()));
+                () -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.DEADBAND)));
 
         collector.setDefaultCommand(new Collect(()-> (copilotController.getRightTriggerAxis() - copilotController.getLeftTriggerAxis()), collector, indexer));
     }
