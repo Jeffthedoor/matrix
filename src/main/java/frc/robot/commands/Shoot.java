@@ -4,6 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Shooter;
@@ -20,7 +21,7 @@ public class Shoot extends Command {
         this.indexer = indexer;
         this.shooter = shooter;
 
-        addRequirements(shooter, indexer);
+        addRequirements(shooter);
     }
     @Override
     public void initialize() {
@@ -29,13 +30,15 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
-        shooter.setPower(LightningShuffleboard.getDouble("shooter", "target pow", 0.7));
+        // shooter.setPower(LightningShuffleboard.getDouble("shooter", "target pow", 0.7));
         
-        if(shooter.getRPM() >= LightningShuffleboard.getDouble("shooter", "target RPM", 1000)) {
-            indexer.setPower(0.3);
-            startShootTime = Timer.getFPGATimestamp();
-            isShooting = true;
-        }
+        // if(shooter.getRPM() >= LightningShuffleboard.getDouble("shooter", "target RPM", 1000)) {
+        //     indexer.setPower(Constants.INDEX_POWER);
+        //     startShootTime = Timer.getFPGATimestamp();
+        //     isShooting = true;
+        // }
+
+        shooter.setPower(1d);
     }
 
     @Override

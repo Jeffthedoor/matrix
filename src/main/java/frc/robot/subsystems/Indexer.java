@@ -4,25 +4,33 @@
 
 package frc.robot.subsystems;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.RobotMap.CAN;
 
 public class Indexer extends SubsystemBase {
-
-    CANSparkMax indexerMotor;
-
+    TalonFX motor = new TalonFX(CAN.INDEXER_MOTOR);
+    
     public Indexer() {
-        indexerMotor = new CANSparkMax(CAN.INDEXER_MOTOR, MotorType.kBrushless);
+        TalonFXConfiguration config = new TalonFXConfiguration();
+
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+        motor.getConfigurator().apply(config);        
     }
 
-    public void setPower(double pow) {
-        indexerMotor.set(pow);
+    public void setPower(double speed) {
+        motor.set(speed);
     }
 
-    public void stop() {
-        indexerMotor.set(0d);
+    public void stop() 
+{
+    setPower(0);
+}
+    @Override
+    public void periodic() {
     }
 }

@@ -50,7 +50,7 @@ public final class Constants {
         // CAN IDs
         public static final class CAN {
             // Power distrobution hub ID
-            public static final int PDH = 21;
+            public static final int PDH = 25;
 
             // Front left CanIDs
             public static final int FRONT_LEFT_DRIVE_MOTOR = 3;
@@ -76,5 +76,6 @@ public final class Constants {
         }
     }
 
+    public static final double INDEX_POWER = 0.5;
     
 }

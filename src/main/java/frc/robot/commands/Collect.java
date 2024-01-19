@@ -3,6 +3,7 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Indexer;
 
@@ -23,7 +24,7 @@ public class Collect extends Command {
     @Override
     public void execute() {
         collector.setPower(pow.getAsDouble());
-        indexer.setPower(pow.getAsDouble() * 0.3);
+        indexer.setPower(pow.getAsDouble() * Constants.INDEX_POWER);
     }
 
     @Override
