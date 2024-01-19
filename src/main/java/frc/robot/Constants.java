@@ -68,6 +68,11 @@ public final class Constants {
             public static final int BACK_LEFT_DRIVE_MOTOR = 1;
             public static final int BACK_LEFT_AZIMUTH_MOTOR = 2;
             public static final int BACK_LEFT_CANCODER = 9;
+
+            public static final int COLLECTOR_MOTOR = 13;
+            public static final int SHOOTER_MOTOR1 = 15; //right flywheel
+            public static final int SHOOTER_MOTOR2 = 14;
+            public static final int INDEXER_MOTOR = 16;
         }
     }
 

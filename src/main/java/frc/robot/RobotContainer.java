@@ -10,19 +10,31 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
+import frc.robot.commands.Collect;
+import frc.robot.commands.Shoot;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
 
 public class RobotContainer extends LightningContainer {
     private Drivetrain drivetrain;
+    private Collector collector;
+    private Indexer indexer;
+    private Shooter shooter;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
-    private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
+    private static XboxController copilotController = new XboxController(ControllerConstants.COPILOT_CONTROLLER_PORT);
+    // private final SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
     @Override
 	protected void initializeSubsystems() {
-		LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
+        collector = new Collector();
+        shooter = new Shooter();
+        indexer = new Indexer();
+		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
     }
 
     @Override
@@ -32,11 +44,15 @@ public class RobotContainer extends LightningContainer {
         drivetrain.zeroGyro();
         new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
         new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
+
+        new Trigger(copilotController::getAButton).whileTrue(new Shoot(indexer, shooter));
+
     }
 
     @Override
     protected Command getAutonomousCommands() {
-        return autoChooser.getSelected();
+        // return autoChooser.getSelected();
+        return null;
     }
 
     @Override
@@ -48,6 +64,8 @@ public class RobotContainer extends LightningContainer {
                 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
                 () -> -driverController.getRightX(),
                 () -> -driverController.getRightY()));
+
+        collector.setDefaultCommand(new Collect(()-> (copilotController.getRightTriggerAxis() - copilotController.getLeftTriggerAxis()), collector, indexer));
     }
 
     @Override
