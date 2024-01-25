@@ -1,6 +1,8 @@
 package frc.robot;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -10,11 +12,14 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.commands.AbsoluteDrive;
+import frc.robot.commands.AutonShoot;
+import frc.robot.commands.Climb;
 import frc.robot.commands.Collect;
 import frc.robot.commands.Shoot;
 import frc.robot.commands.SimpleDrive;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
+import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
 import frc.robot.subsystems.Indexer;
@@ -25,6 +30,7 @@ public class RobotContainer extends LightningContainer {
     private Collector collector;
     private Indexer indexer;
     private Shooter shooter;
+    private Climber climber;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
     private static XboxController copilotController = new XboxController(ControllerConstants.COPILOT_CONTROLLER_PORT);
@@ -35,6 +41,7 @@ public class RobotContainer extends LightningContainer {
         collector = new Collector();
         shooter = new Shooter();
         indexer = new Indexer();
+        climber = new Climber();
 		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
     }
 
@@ -45,12 +52,13 @@ public class RobotContainer extends LightningContainer {
         new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
         new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
 
-        new Trigger(copilotController::getAButton).whileTrue(new Shoot(indexer, shooter));
+        new Trigger(copilotController::getAButton).toggleOnTrue(new Shoot(indexer, shooter));
 
     }
 
     @Override
     protected Command getAutonomousCommands() {
+        // NamedCommands.registerCommand("startShooting", new AutonShoot(shooter, collector, indexer));
         // return autoChooser.getSelected();
         return null;
     }
@@ -65,6 +73,8 @@ public class RobotContainer extends LightningContainer {
                 () -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.DEADBAND)));
 
         collector.setDefaultCommand(new Collect(()-> (copilotController.getRightTriggerAxis() - copilotController.getLeftTriggerAxis()), collector, indexer));
+        climber.setDefaultCommand(new Climb(() -> -MathUtil.applyDeadband(copilotController.getLeftY(), 0.1), climber));
+        
     }
 
     @Override

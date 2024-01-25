@@ -21,10 +21,7 @@ public abstract class LightningContainer {
         configureButtonBindings();
         configureDefaultCommands();
         initializeDashboardCommands();
-
-        // Configure autonomous
-        getAutonomousCommands();
-
+        
         // Setup fault monitoring
         configureFaultCodes();
         configureFaultMonitors();

@@ -30,7 +30,7 @@ public class Shoot extends Command {
 
     @Override
     public void execute() {
-        // shooter.setPower(LightningShuffleboard.getDouble("shooter", "target pow", 0.7));
+        shooter.setPower(LightningShuffleboard.getDouble("shooter", "target pow", 0.7));
         
         // if(shooter.getRPM() >= LightningShuffleboard.getDouble("shooter", "target RPM", 1000)) {
         //     indexer.setPower(Constants.INDEX_POWER);
@@ -38,7 +38,7 @@ public class Shoot extends Command {
         //     isShooting = true;
         // }
 
-        shooter.setPower(1d);
+        // shooter.setPower(LightningShuffleboard.getDouble("shooter", "target pow", 0.7));
     }
 
     @Override

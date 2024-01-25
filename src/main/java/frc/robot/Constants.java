@@ -75,9 +75,10 @@ public final class Constants {
             public static final int SHOOTER_MOTOR1 = 15; //right flywheel
             public static final int SHOOTER_MOTOR2 = 14;
             public static final int INDEXER_MOTOR = 16;
+            public static final int CLIMB_MOTOR = 17;
         }
     }
 
-    public static final double INDEX_POWER = 0.5;
+    public static final double INDEX_POWER = 0.65;
     
 }
