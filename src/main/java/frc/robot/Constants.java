@@ -79,6 +79,6 @@ public final class Constants {
         }
     }
 
-    public static final double INDEX_POWER = 0.65;
+    public static final double INDEX_POWER = 1;
     
 }
