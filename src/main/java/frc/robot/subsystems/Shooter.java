@@ -64,20 +64,23 @@ public class Shooter extends SubsystemBase {
     public Shooter() {
         config1 = new TalonFXConfiguration();
         config2 = new TalonFXConfiguration();
+        double kP = 0.3;
+        double kS = 0.15;
+        double kV = 0.108;
 
-        config1.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config1.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        config1.Slot0.kP = 0.4;
+        config1.Slot0.kP = kP;
         config1.Slot0.kI = 0;
         config1.Slot0.kD = 0;
-        config1.Slot0.kS = 0;
-        config1.Slot0.kV = 0.1;
+        config1.Slot0.kS = kS;
+        config1.Slot0.kV = kV;
 
-        config2.Slot0.kP = 0.4;
+        config2.Slot0.kP = kP;
         config2.Slot0.kI = 0;
         config2.Slot0.kD = 0;
-        config2.Slot0.kS = 0;
-        config2.Slot0.kV = 0.1;
+        config2.Slot0.kS = kS;
+        config2.Slot0.kV = kV;
 
         config1.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         config2.MotorOutput.NeutralMode = NeutralModeValue.Brake;
