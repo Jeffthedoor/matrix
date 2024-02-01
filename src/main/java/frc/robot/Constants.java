@@ -15,12 +15,16 @@ public final class Constants {
         public static final int DRIVER_CONTROLLER_PORT = 0;
         public static final int COPILOT_CONTROLLER_PORT = 1;
 
+        
         // Deadband, for joysticks
         public static final double DEADBAND = 0.1d;
     }
-
+    
     // Constants for our drivetrain
     public static final class DrivetrainConstants {
+        public static final double SPEED_MULTIPLIER = 0.8;
+        public static final double ROTATION_MULTIPLIER = 0.6;
+        
         public static final Rotation3d GYRO_OFFSET = new Rotation3d(0, 0, Units.degreesToRadians(90));
 
         public static final double AZIMUTH_RATIO = 12.8;

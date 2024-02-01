@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
+import frc.robot.Constants.DrivetrainConstants;
 import frc.robot.commands.AbsoluteDrive;
 import frc.robot.commands.AutonShoot;
 import frc.robot.commands.Climb;
@@ -68,9 +69,9 @@ public class RobotContainer extends LightningContainer {
         drivetrain.setDefaultCommand(
             new SimpleDrive(
                 drivetrain,
-                () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND),
-                () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
-                () -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.DEADBAND)));
+                () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND) * DrivetrainConstants.SPEED_MULTIPLIER,
+                () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND) * DrivetrainConstants.SPEED_MULTIPLIER,
+                () -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.DEADBAND * DrivetrainConstants.ROTATION_MULTIPLIER)));
 
         collector.setDefaultCommand(new Collect(()-> (copilotController.getRightTriggerAxis() - copilotController.getLeftTriggerAxis()), collector, indexer));
         climber.setDefaultCommand(new Climb(() -> -MathUtil.applyDeadband(copilotController.getLeftY(), 0.1), climber));
