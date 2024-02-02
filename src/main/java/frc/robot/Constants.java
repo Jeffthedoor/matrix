@@ -84,5 +84,6 @@ public final class Constants {
     }
 
     public static final double INDEX_POWER = 1;
+    public static final double INDEX_DEBOUNCE_TIME = 0.1;
     
 }
