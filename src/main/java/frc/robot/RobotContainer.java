@@ -19,7 +19,7 @@ import swervelib.SwerveModule;
 
 public class RobotContainer extends LightningContainer {
     private Drivetrain drivetrain;
-    private Climber climber;
+    // private Climber climber;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
     // private SendableChooser<Command> autoChooser;
@@ -27,7 +27,7 @@ public class RobotContainer extends LightningContainer {
     @Override
 	protected void initializeSubsystems() {
         drivetrain = new Drivetrain();
-        climber = new Climber();
+        // climber = new Climber();
 
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
@@ -57,7 +57,7 @@ public class RobotContainer extends LightningContainer {
                 () -> -driverController.getRightX(),
                 () -> -driverController.getRightY()));
 
-        climber.setDefaultCommand(new Climb(climber, ()-> (driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis())));
+        // climber.setDefaultCommand(new Climb(climber, ()-> (driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis())));
 
     }
 
