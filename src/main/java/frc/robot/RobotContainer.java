@@ -9,17 +9,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.commands.AbsoluteDrive;
-import frc.robot.commands.Climb;
+import frc.robot.commands.AbsoluteFieldDrive;
+import frc.robot.commands.Collect;
 import frc.robot.lib.LightningContainer;
 import frc.robot.lib.shuffleboard.LightningShuffleboard;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
 import frc.robot.subsystems.Drivetrain;
 import swervelib.SwerveModule;
 
 public class RobotContainer extends LightningContainer {
     private Drivetrain drivetrain;
-    // private Climber climber;
+    private Collector collector;
 
     private static XboxController driverController = new XboxController(ControllerConstants.DRIVER_CONTROLLER_PORT);
     // private SendableChooser<Command> autoChooser;
@@ -27,7 +27,7 @@ public class RobotContainer extends LightningContainer {
     @Override
 	protected void initializeSubsystems() {
         drivetrain = new Drivetrain();
-        // climber = new Climber();
+        collector = new Collector();
 
 		// autoChooser = AutoBuilder.buildAutoChooser();
 		// LightningShuffleboard.set("Auton", "Auto Chooser", autoChooser);
@@ -35,8 +35,6 @@ public class RobotContainer extends LightningContainer {
 
     @Override
     protected void configureButtonBindings() {
-        
-        drivetrain.zeroGyro();
         new Trigger(driverController::getStartButton).onTrue(new InstantCommand(drivetrain::zeroGyro));
         new Trigger(driverController::getXButton).onTrue(new InstantCommand(drivetrain::lock, drivetrain));
     }
@@ -50,14 +48,18 @@ public class RobotContainer extends LightningContainer {
     @Override
     protected void configureDefaultCommands() {
         drivetrain.setDefaultCommand(
-            new AbsoluteDrive(
-                drivetrain,
-                () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND),
-                () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
-                () -> -driverController.getRightX(),
-                () -> -driverController.getRightY()));
+            // new AbsoluteFieldDrive(
+            //     drivetrain,
+            //     () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.DEADBAND),
+            //     () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.DEADBAND),
+            //     () -> -driverController.getRightX(),
+            //     () -> -driverController.getRightY()));
+            new AbsoluteFieldDrive(drivetrain,
+                () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.DEADBAND),
+                () -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.DEADBAND),
+                () -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.DEADBAND)));
 
-        // climber.setDefaultCommand(new Climb(climber, ()-> (driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis())));
+        collector.setDefaultCommand(new Collect(collector, ()-> (driverController.getRightTriggerAxis() - driverController.getLeftTriggerAxis())));
 
     }
 

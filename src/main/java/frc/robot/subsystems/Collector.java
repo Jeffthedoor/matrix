@@ -10,10 +10,10 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Climber extends SubsystemBase {
-    TalonFX climbMotor = new TalonFX(9);
+public class Collector extends SubsystemBase {
+    TalonFX climbMotor = new TalonFX(3);
     
-    public Climber() {
+    public Collector() {
         TalonFXConfiguration config = new TalonFXConfiguration();
 
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;

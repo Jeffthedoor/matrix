@@ -3,13 +3,13 @@ package frc.robot.commands;
 import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.Climber;
+import frc.robot.subsystems.Collector;
 
-public class Climb extends Command {
-    Climber climber;
+public class Collect extends Command {
+    Collector climber;
     DoubleSupplier speed;
 
-    public Climb(Climber climber, DoubleSupplier speed) {
+    public Collect(Collector climber, DoubleSupplier speed) {
         this.climber = climber;
         this.speed = speed;
 
@@ -21,7 +21,7 @@ public class Climb extends Command {
 
     @Override
     public void execute() {
-        climber.climb(speed.getAsDouble() * 0.5);
+        climber.climb(speed.getAsDouble());
     }
 
     @Override

@@ -57,7 +57,6 @@ public class Drivetrain extends SubsystemBase {
 		}
 
 		swerveDrive.setGyroOffset(new Rotation3d(0, 0, 90));
-		swerveDrive.zeroGyro();
 
 
 		CommandScheduler.getInstance().registerSubsystem(this);
@@ -183,8 +182,6 @@ public class Drivetrain extends SubsystemBase {
 	 */
 	public void zeroGyro() {
 		swerveDrive.zeroGyro();
-		swerveDrive.setGyroOffset(new Rotation3d(0, 0, 0));
-
 	}
 
 	/**
